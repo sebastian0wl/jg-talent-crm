@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import { STAGE_GATES, PIPELINE_STAGES } from '../types'
 import { getDeal, getCompany, getPerson, getTasksForDeal, getActivitiesForDeal } from '../data/mockData'
+import { getDealScore, getEmailThreadForDeal, getEmailThread } from '../data/scores'
 import { StageBadge, PipelineBadge, PriorityBadge, TaskPriorityBadge, TaskStatusBadge, ActivityIcon } from './Badges'
+import { DealScoreCard } from './DealScoreCard'
+import { EmailThreadView } from './EmailThreadView'
 
 interface Props {
   dealId: string
@@ -18,6 +22,9 @@ export function DealDetail({ dealId, onClose }: Props) {
   const stages = PIPELINE_STAGES[deal.pipeline]
   const currentIdx = stages.indexOf(deal.stage)
   const gate = STAGE_GATES[deal.stage]
+  const score = getDealScore(dealId)
+  const emailThreads = getEmailThreadForDeal(dealId)
+  const [tab, setTab] = useState<'overview' | 'score'>('overview')
 
   return (
     <>
@@ -40,9 +47,38 @@ export function DealDetail({ dealId, onClose }: Props) {
             <StageBadge stage={deal.stage} pipeline={deal.pipeline} />
             <span className="text-xs text-text-muted">{deal.type}</span>
           </div>
+
+          {/* Tab bar */}
+          <div className="flex gap-1 mt-3 bg-surface-muted rounded-lg p-0.5">
+            <button
+              onClick={() => setTab('overview')}
+              className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${
+                tab === 'overview' ? 'bg-white text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setTab('score')}
+              className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${
+                tab === 'score'
+                  ? 'bg-white text-text-primary shadow-sm'
+                  : score ? 'text-text-muted hover:text-text-secondary' : 'text-text-muted/50 cursor-not-allowed'
+              }`}
+              disabled={!score}
+            >
+              Score{score ? ` (${score.overallGrade})` : ''}
+            </button>
+          </div>
         </div>
 
         <div className="p-5 space-y-6">
+          {/* Score Tab */}
+          {tab === 'score' && score && (
+            <DealScoreCard score={score} />
+          )}
+
+          {tab === 'overview' && <>
           {/* Stage Progress */}
           <div>
             <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Pipeline Progress</h3>
@@ -155,26 +191,49 @@ export function DealDetail({ dealId, onClose }: Props) {
             </div>
           )}
 
+          {/* Email Threads */}
+          {emailThreads.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Email History ({emailThreads.length})</h3>
+              <div className="space-y-2">
+                {emailThreads.map(thread => (
+                  <EmailThreadView key={thread.activityId} thread={thread} />
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Timeline */}
           {timeline.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Activity</h3>
               <div className="space-y-2">
-                {timeline.map(act => (
-                  <div key={act.id} className="flex items-start gap-2.5">
-                    <ActivityIcon type={act.type} />
-                    <div>
-                      <p className="text-sm text-text-primary">{act.title}</p>
-                      <p className="text-xs text-text-muted">
-                        {new Date(act.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                        <span className="ml-1.5 capitalize">{act.createdBy}</span>
-                      </p>
+                {timeline.map(act => {
+                  const actThread = (act.type === 'email_sent' || act.type === 'email_received') ? getEmailThread(act.id) : null
+                  return (
+                    <div key={act.id}>
+                      <div className="flex items-start gap-2.5">
+                        <ActivityIcon type={act.type} />
+                        <div className="flex-1">
+                          <p className="text-sm text-text-primary">{act.title}</p>
+                          <p className="text-xs text-text-muted">
+                            {new Date(act.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                            <span className="ml-1.5 capitalize">{act.createdBy}</span>
+                          </p>
+                        </div>
+                      </div>
+                      {actThread && (
+                        <div className="ml-7 mt-1.5">
+                          <EmailThreadView thread={actThread} />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           )}
+          </>}
         </div>
       </div>
     </>
