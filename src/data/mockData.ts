@@ -15,13 +15,13 @@ export const companies: Company[] = [
 ]
 
 export const people: Person[] = [
-  { id: 'pe-1', name: 'Sarah Chen', email: 'sarah@envato.com', role: 'Partnerships Lead', companyId: 'co-1' },
-  { id: 'pe-2', name: 'Victor Perez', email: 'victor@krea.ai', role: 'Head of Growth', companyId: 'co-2' },
-  { id: 'pe-3', name: 'Maria Santos', email: 'maria@elevenlabs.io', role: 'Creator Partnerships', companyId: 'co-3' },
-  { id: 'pe-4', name: 'Ridd', email: 'ridd@decimals.co', role: 'Scout', companyId: 'co-4' },
+  { id: 'pe-1', name: 'Hichame Assi', email: 'hichame.assi@envato.com', role: 'Partnerships', companyId: 'co-1' },
+  { id: 'pe-2', name: 'Miguel Lara', email: 'miguel@krea.ai', role: 'Partnerships', companyId: 'co-2' },
+  { id: 'pe-3', name: 'Konstantin Kanin', email: 'konstantin@kudosnarratives.com', role: 'Agency (Kudos Narratives)', companyId: 'co-3', notes: 'Agency rep for ElevenLabs. Also: Liza Novikova (liz@kudosnarratives.com)' },
+  { id: 'pe-4', name: 'Danny Martinez', email: 'danny@decimals.work', role: 'Partnerships', companyId: 'co-4', notes: 'Also: Michael Riddering / Ridd (ridd@dive.club)' },
   { id: 'pe-5', name: 'Alex Kim', email: 'alex@x.ai', role: 'Marketing', companyId: 'co-5' },
   { id: 'pe-6', name: 'Jordan Lee', email: 'jordan@flux.ai', role: 'Partnerships', companyId: 'co-6' },
-  { id: 'pe-7', name: 'Luna Park', email: 'luna@reve.art', role: 'Community Lead', companyId: 'co-7' },
+  { id: 'pe-7', name: 'Oscar Dumlao', email: 'oscar.dumlao@reve.art', role: 'Partnerships', companyId: 'co-7', notes: 'Initiated from X thread. Also: Melisa Seah (melisa.seah@reve.art)' },
   { id: 'pe-8', name: 'Tyler Brooks', email: 'tyler@block.xyz', role: 'Brand Manager', companyId: 'co-8' },
   { id: 'pe-9', name: 'Mika Tanaka', email: 'mika@higgsfield.ai', role: 'CEO', companyId: 'co-9', notes: 'Via Shown Media' },
   { id: 'pe-10', name: 'Carlos Ruiz', email: 'carlos@freepik.com', role: 'Influencer Ops', companyId: 'co-10' },
@@ -151,13 +151,17 @@ export const tasks: Task[] = [
 ]
 
 export const activities: Activity[] = [
-  { id: 'a-1', type: 'email_received', title: 'Envato sent revised terms', dealId: 'd-1', companyId: 'co-1', personId: 'pe-1', createdBy: 'system', timestamp: '2026-04-07T14:30:00Z' },
-  { id: 'a-2', type: 'email_sent', title: 'Sent Krea follow-up re: affiliate link', dealId: 'd-2', companyId: 'co-2', personId: 'pe-2', createdBy: 'justin', timestamp: '2026-04-06T10:15:00Z' },
+  { id: 'a-1', type: 'email_sent', title: 'Pitched Envato 3-point proposal (1stCollab, workshop, Tuts+)', dealId: 'd-1', companyId: 'co-1', personId: 'pe-1', createdBy: 'justin', timestamp: '2026-04-01T12:00:00Z' },
+  { id: 'a-14', type: 'email_received', title: 'Hichame replied: send itemized proposal for points 2 & 3', dealId: 'd-1', companyId: 'co-1', personId: 'pe-1', createdBy: 'system', timestamp: '2026-04-02T14:00:00Z' },
+  { id: 'a-2', type: 'email_sent', title: 'Krea follow-up on next steps', dealId: 'd-2', companyId: 'co-2', personId: 'pe-2', createdBy: 'justin', timestamp: '2026-04-05T10:15:00Z' },
   { id: 'a-3', type: 'agent_alert', title: 'Flux deal flagged stale (25+ days)', dealId: 'd-6', companyId: 'co-6', createdBy: 'agent', timestamp: '2026-04-07T09:00:00Z' },
   { id: 'a-4', type: 'email_received', title: 'Lovable countered at $15K', dealId: 'd-11', companyId: 'co-11', personId: 'pe-11', createdBy: 'system', timestamp: '2026-04-07T16:00:00Z' },
   { id: 'a-5', type: 'meeting', title: 'Freepik intro call scheduled for Apr 9', dealId: 'd-10', companyId: 'co-10', personId: 'pe-10', createdBy: 'agent', timestamp: '2026-04-08T08:00:00Z' },
   { id: 'a-6', type: 'note', title: 'Decimals campaign drafts rewritten in voice', dealId: 'd-4', companyId: 'co-4', createdBy: 'justin', timestamp: '2026-04-08T11:00:00Z' },
-  { id: 'a-7', type: 'email_received', title: 'ElevenLabs wants to explore partnership', dealId: 'd-3', companyId: 'co-3', personId: 'pe-3', createdBy: 'system', timestamp: '2026-04-05T13:00:00Z' },
+  { id: 'a-7', type: 'email_received', title: 'ElevenLabs collab proposal via Kudos Narratives (Konstantin)', dealId: 'd-3', companyId: 'co-3', personId: 'pe-3', createdBy: 'system', timestamp: '2026-04-06T13:00:00Z' },
+  { id: 'a-15', type: 'email_sent', title: 'Justin confirmed ElevenLabs — "Works! Send agreement" + asked re deadline & tool access', dealId: 'd-3', companyId: 'co-3', personId: 'pe-3', createdBy: 'justin', timestamp: '2026-04-08T11:00:00Z' },
+  { id: 'a-16', type: 'email_received', title: 'Reve — Oscar connected Jamey with Melisa Seah, meeting booked Apr 8', dealId: 'd-7', companyId: 'co-7', personId: 'pe-7', createdBy: 'system', timestamp: '2026-04-07T15:00:00Z' },
+  { id: 'a-17', type: 'email_received', title: 'Decimals — Danny thread, meeting scheduled for Apr 8', dealId: 'd-4', companyId: 'co-4', personId: 'pe-4', createdBy: 'system', timestamp: '2026-04-08T09:00:00Z' },
   { id: 'a-8', type: 'agent_alert', title: 'Krea flagged stale — 4 days', dealId: 'd-2', companyId: 'co-2', createdBy: 'agent', timestamp: '2026-04-08T09:00:00Z' },
   { id: 'a-9', type: 'email_sent', title: 'Lovable counter-offer at $20K', dealId: 'd-11', companyId: 'co-11', personId: 'pe-11', createdBy: 'justin', timestamp: '2026-04-08T12:00:00Z' },
   { id: 'a-10', type: 'call', title: 'Higgsfield post-campaign debrief', dealId: 'd-9', companyId: 'co-9', personId: 'pe-9', createdBy: 'justin', timestamp: '2026-04-04T17:00:00Z' },

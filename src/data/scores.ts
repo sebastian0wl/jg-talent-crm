@@ -249,24 +249,48 @@ export const getDealScore = (dealId: string) => dealScores.find(s => s.dealId ==
 // ── Email Threads ──
 
 export const emailThreads: EmailThread[] = [
+  // ── Envato (d-1) — thread 19d4ae6970f5f98f ──
   {
     activityId: 'a-1', dealId: 'd-1',
     messages: [
-      { id: 'em-1', from: 'sarah@envato.com', to: 'partnerships@brand-sprints.com', subject: 'Re: Jamey Gannon x Envato — Education Partnership', body: 'Hi Justin,\n\nThanks for the proposal! We\'ve reviewed internally and love the direction. A few thoughts on the revised terms:\n\n- We\'re aligned on 3-5 tutorials focused on AI design workflows\n- Happy with the SREF pack inclusion\n- We\'d like to add brand design/logo content (this is a big gap in our library)\n- Non-exclusive is fine\n- Budget: we can do $45K for the full package\n\nCan we schedule a call to finalize scope?\n\nBest,\nSarah Chen\nPartnerships Lead, Envato', timestamp: '2026-04-07T14:30:00Z', direction: 'inbound' },
-      { id: 'em-2', from: 'partnerships@brand-sprints.com', to: 'sarah@envato.com', subject: 'Re: Jamey Gannon x Envato — Education Partnership', body: 'Hi Sarah,\n\nGreat to hear you\'re aligned on the direction. A few notes from our side:\n\n- Jamey is excited about tutorials (not full courses) — this plays to her strength of concise, practical content\n- Brand design/logo content is a great add. She\'s been doing a lot of AI-assisted identity work\n- On budget: we were targeting $50K given the scope (tutorials + SREFs + brand design templates). Happy to discuss on a call.\n\nHow does Thursday at 2pm ET work?\n\nBest,\nJustin\nTalent Manager, Jamey Gannon', timestamp: '2026-04-06T16:00:00Z', direction: 'outbound' },
+      { id: 'em-1', from: 'partnerships@brand-sprints.com', to: 'hichame.assi@envato.com', subject: 'Jamey Gannon x Envato - Partnership Next Steps', body: 'Hi Hichame,\n\nFollowing up on our conversation. Here are 3 ideas we\'d love to explore:\n\n1. 1stCollab post — Jamey is already working on this\n2. Live workshop — AI design workflows for the Envato audience\n3. Tuts+ educational series — ongoing tutorial content\n\nLet us know what resonates and we can put together a formal proposal.\n\nBest,\nJustin', timestamp: '2026-04-01T12:00:00Z', direction: 'outbound' },
+      { id: 'em-2', from: 'hichame.assi@envato.com', to: 'partnerships@brand-sprints.com', subject: 'Re: Jamey Gannon x Envato - Partnership Next Steps', body: 'Probably best for you to send through a proposal but itemize it for the 2nd and 3rd points above. We\'ll then review and get back to you ASAP. Glad Jamey\'s working on the 1st Collab post.', timestamp: '2026-04-02T14:00:00Z', direction: 'inbound' },
     ],
   },
+  // ── Krea (d-2) — thread 19d315b57aa6aec3 ──
   {
-    activityId: 'a-4', dealId: 'd-11',
+    activityId: 'a-2', dealId: 'd-2',
     messages: [
-      { id: 'em-3', from: 'emma@lovable.dev', to: 'partnerships@brand-sprints.com', subject: 'Re: Sponsored Content — Jamey Gannon x Lovable', body: 'Hi Justin,\n\nWe love Jamey\'s work and think the Figma-to-code angle is perfect for our audience.\n\nAfter reviewing internally, we can offer $15K for a sponsored video walkthrough + X thread. This includes organic posting only.\n\nLet me know if that works or if you\'d like to discuss further.\n\nBest,\nEmma Wright\nMarketing Lead, Lovable', timestamp: '2026-04-07T16:00:00Z', direction: 'inbound' },
-      { id: 'em-4', from: 'partnerships@brand-sprints.com', to: 'emma@lovable.dev', subject: 'Re: Sponsored Content — Jamey Gannon x Lovable', body: 'Hey Emma,\n\nAppreciate the offer! Jamey is genuinely excited about this one — she already uses Lovable in her Figma-to-code workflow, so the content will be very authentic.\n\nOn pricing: given the production value of a full video walkthrough + thread, and Jamey\'s audience reach, we\'re targeting $20K for this package. This reflects:\n- Full HD video production with real project showcase\n- X thread with engagement\n- Jamey\'s 120K+ highly targeted audience of designers and AI professionals\n\nWould love to find a number that works for both sides. Open to discussing scope adjustments if helpful.\n\nBest,\nJustin', timestamp: '2026-04-08T12:00:00Z', direction: 'outbound' },
+      { id: 'em-3', from: 'partnerships@brand-sprints.com', to: 'miguel@krea.ai', subject: 'Krea x Jamey Gannon - Next Steps', body: 'Hi Miguel,\n\nFollowing up on our conversation about the Krea x Jamey partnership. Wanted to touch base on next steps and timing.\n\nBest,\nJustin', timestamp: '2026-04-03T10:00:00Z', direction: 'outbound' },
+      { id: 'em-4', from: 'miguel@krea.ai', to: 'partnerships@brand-sprints.com', subject: 'Re: Krea x Jamey Gannon - Next Steps', body: 'Hey Justin, thanks for following up. Let me sync with the team and get back to you on next steps.', timestamp: '2026-04-04T11:00:00Z', direction: 'inbound' },
+      { id: 'em-5', from: 'partnerships@brand-sprints.com', to: 'miguel@krea.ai', subject: 'Re: Krea x Jamey Gannon - Next Steps', body: 'Sounds good Miguel, looking forward to hearing back. Let me know if you need anything from our side.', timestamp: '2026-04-05T10:15:00Z', direction: 'outbound' },
     ],
   },
+  // ── ElevenLabs (d-3) — thread 19cfc0c1cc584619 ──
   {
     activityId: 'a-7', dealId: 'd-3',
     messages: [
-      { id: 'em-5', from: 'maria@elevenlabs.io', to: 'partnerships@brand-sprints.com', subject: 'Creator Partnership — ElevenLabs x Jamey Gannon', body: 'Hi there,\n\nI\'m Maria from the Creator Partnerships team at ElevenLabs. We\'ve been following Jamey\'s work in AI creative tools and think there could be a great fit for a partnership.\n\nWe recently launched some exciting new features for creative professionals and would love to explore how Jamey might showcase them to her audience.\n\nWould you be open to a quick call to discuss possibilities?\n\nBest,\nMaria Santos\nCreator Partnerships, ElevenLabs', timestamp: '2026-04-05T13:00:00Z', direction: 'inbound' },
+      { id: 'em-6', from: 'liz@kudosnarratives.com', to: 'partnerships@brand-sprints.com', subject: 'ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Hi Justin,\n\nI\'m Liza from Kudos Narratives, reaching out on behalf of ElevenLabs regarding a collaboration proposal for Jamey Gannon. Would love to discuss terms and deliverables.\n\nBest,\nLiza Novikova\nKudos Narratives', timestamp: '2026-04-04T10:00:00Z', direction: 'inbound' },
+      { id: 'em-7', from: 'konstantin@kudosnarratives.com', to: 'partnerships@brand-sprints.com', subject: 'Re: ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Hi Justin,\n\nSharing the brief — it\'s an IG video cross-posted to TikTok featuring ElevenLabs Dubbing v2. Let me know if you have any questions.\n\nBest,\nKonstantin Kanin\nKudos Narratives', timestamp: '2026-04-06T13:00:00Z', direction: 'inbound' },
+      { id: 'em-8', from: 'partnerships@brand-sprints.com', to: 'konstantin@kudosnarratives.com', subject: 'Re: ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Works! Let\'s do it. Send agreement.\n\nAlso — what\'s the deadline on this, and can we get tool access for Jamey to start exploring Dubbing v2?\n\nBest,\nJustin', timestamp: '2026-04-08T11:00:00Z', direction: 'outbound' },
+    ],
+  },
+  // ── Decimals (d-4) — thread 19d412ebdd4af0b5 ──
+  {
+    activityId: 'a-17', dealId: 'd-4',
+    messages: [
+      { id: 'em-9', from: 'danny@decimals.work', to: 'partnerships@brand-sprints.com', subject: 'Jamey <> Decimals', body: 'Hey Justin,\n\nDanny here from Decimals. Would love to chat about a potential collaboration with Jamey. We think there\'s a strong fit with our designer community.\n\nBest,\nDanny Martinez\nDecimals', timestamp: '2026-04-05T14:00:00Z', direction: 'inbound' },
+      { id: 'em-10', from: 'partnerships@brand-sprints.com', to: 'danny@decimals.work', subject: 'Re: Jamey <> Decimals', body: 'Hey Danny, great to connect. Let\'s set up a time to discuss. Looking at the affiliate model and what a campaign could look like.\n\nBest,\nJustin', timestamp: '2026-04-06T10:00:00Z', direction: 'outbound' },
+      { id: 'em-11', from: 'danny@decimals.work', to: 'partnerships@brand-sprints.com', subject: 'Re: Jamey <> Decimals', body: 'Sounds great. Let\'s meet today to finalize details.\n\n— Danny', timestamp: '2026-04-08T09:00:00Z', direction: 'inbound' },
+    ],
+  },
+  // ── Reve (d-7) — thread 19d50e8eb71351e6 ──
+  {
+    activityId: 'a-16', dealId: 'd-7',
+    messages: [
+      { id: 'em-12', from: 'oscar.dumlao@reve.art', to: 'hello@brand-sprints.com', subject: 'Jamey <> Reve', body: 'Hey — saw Jamey\'s thread on X and loved it. Would love to connect and explore a potential collaboration with Reve. Looping in Melisa from our team.\n\nOscar Dumlao\nReve.art', timestamp: '2026-04-05T16:00:00Z', direction: 'inbound' },
+      { id: 'em-13', from: 'jamey@brand-sprints.com', to: 'oscar.dumlao@reve.art', subject: 'Re: Jamey <> Reve', body: 'Down to jam next week and talk workflows, then can loop in my manager Justin.\n\n— Jamey', timestamp: '2026-04-06T12:00:00Z', direction: 'outbound' },
+      { id: 'em-14', from: 'melisa.seah@reve.art', to: 'jamey@brand-sprints.com', subject: 'Re: Jamey <> Reve', body: 'Great to meet you Jamey — love your work and excited to chat! Here\'s my booking link to set up a time.\n\nMelisa Seah\nReve.art', timestamp: '2026-04-07T15:00:00Z', direction: 'inbound' },
     ],
   },
 ]
