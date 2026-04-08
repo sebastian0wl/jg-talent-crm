@@ -209,6 +209,76 @@ export interface Deliverable {
   invoiceStatus: InvoiceStatus
 }
 
+// ── Deal Evaluator (9-Dimension Scorecard) ──
+
+export type ScoreGrade = 'S' | 'A' | 'B' | 'C' | 'D'
+
+export const SCORE_DIMENSIONS = [
+  'Cash Value',
+  'Brand Prestige',
+  'Distribution',
+  'Audience Match',
+  'Education Funnel',
+  'Relationship Compound',
+  'Creative Value',
+  'Time Cost',
+  'Strategic Timing',
+] as const
+
+export type ScoreDimension = typeof SCORE_DIMENSIONS[number]
+
+export interface DimensionScore {
+  dimension: ScoreDimension
+  grade: ScoreGrade
+  reasoning: string
+}
+
+export interface UpgradeMove {
+  dimension: ScoreDimension
+  currentGrade: ScoreGrade
+  potentialGrade: ScoreGrade
+  move: string
+}
+
+export interface ViabilityPath {
+  name: string          // "Current Deal" | "Reframed" | "Dream Version"
+  label: string         // "Path A" | "Path B" | "Path C"
+  overallGrade: ScoreGrade
+  verdict: 'not worth it' | 'marginal' | 'viable' | 'strong' | 'no-brainer'
+  changes: string[]
+  whatMakesItWork?: string
+  whatHoldsItBack?: string
+}
+
+export interface DealScore {
+  dealId: string
+  overallGrade: ScoreGrade
+  dimensions: DimensionScore[]
+  upgradeMoves: UpgradeMove[]
+  viabilityPaths: ViabilityPath[]
+  positioningAngles: string[]
+  recommendation: string
+  evaluatedAt: string
+}
+
+// ── Email Thread (for activity detail) ──
+
+export interface EmailMessage {
+  id: string
+  from: string
+  to: string
+  subject: string
+  body: string
+  timestamp: string
+  direction: 'inbound' | 'outbound'
+}
+
+export interface EmailThread {
+  activityId: string
+  dealId: string
+  messages: EmailMessage[]
+}
+
 // ── App ──
 export type User = 'justin' | 'jamey'
 export type ViewId = 'dashboard' | 'deals' | 'companies' | 'people' | 'tasks' | 'activity'

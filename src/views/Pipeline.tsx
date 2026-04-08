@@ -1,8 +1,9 @@
-import { useState, useRef } from 'react'
-import type { PipelineId, Deal } from '../types'
+import { useState, useRef, useMemo } from 'react'
+import type { PipelineId, Deal, DealPriority } from '../types'
 import { PIPELINE_LABELS, PIPELINE_STAGES, PIPELINE_COLORS } from '../types'
-import { deals as initialDeals } from '../data/mockData'
+import { deals as initialDeals, getCompany } from '../data/mockData'
 import { DealCard } from '../components/DealCard'
+import { SearchInput, FilterDropdown } from '../components/TableControls'
 
 interface Props {
   onDealClick: (id: string) => void
@@ -15,9 +16,38 @@ export function Pipeline({ onDealClick }: Props) {
   const [dropTarget, setDropTarget] = useState<string | null>(null)
   const dragCounter = useRef<Record<string, number>>({})
 
+  const [search, setSearch] = useState('')
+  const [priorityFilter, setPriorityFilter] = useState('')
+  const [ownerFilter, setOwnerFilter] = useState('')
+
   const pipelines: PipelineId[] = ['content', 'partnership', 'service']
-  const pipelineDeals = dealState.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
   const stages = PIPELINE_STAGES[activePipeline]
+
+  const priorityOptions = useMemo(() => {
+    const priorities: DealPriority[] = ['High', 'Medium', 'Low']
+    return priorities.map(p => ({ value: p, label: p }))
+  }, [])
+
+  const ownerOptions = useMemo(() => [
+    { value: 'justin', label: 'Justin' },
+    { value: 'jamey', label: 'Jamey' },
+    { value: 'both', label: 'Both' },
+  ], [])
+
+  const pipelineDeals = useMemo(() => {
+    let result = dealState.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
+    if (search) {
+      const q = search.toLowerCase()
+      result = result.filter(d => {
+        const co = getCompany(d.companyId)
+        return d.name.toLowerCase().includes(q) || co?.name.toLowerCase().includes(q) || d.type.toLowerCase().includes(q)
+      })
+    }
+    if (priorityFilter) result = result.filter(d => d.priority === priorityFilter)
+    if (ownerFilter) result = result.filter(d => d.owner === ownerFilter)
+    return result
+  }, [dealState, activePipeline, search, priorityFilter, ownerFilter])
+
   const totalValue = pipelineDeals.reduce((s, d) => s + (d.value ?? 0), 0)
   const lostDeals = dealState.filter(d => d.pipeline === activePipeline && d.stage === 'Lost')
 
@@ -84,6 +114,15 @@ export function Pipeline({ onDealClick }: Props) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:items-center mb-4">
+        <div className="w-full sm:w-56">
+          <SearchInput value={search} onChange={setSearch} placeholder="Search deals..." />
+        </div>
+        <FilterDropdown label="Priority" options={priorityOptions} value={priorityFilter} onChange={setPriorityFilter} />
+        <FilterDropdown label="Owner" options={ownerOptions} value={ownerFilter} onChange={setOwnerFilter} />
       </div>
 
       {/* Kanban — horizontal scroll on all sizes, cards stack naturally */}
