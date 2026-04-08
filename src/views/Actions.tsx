@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import type { User, TaskPriority, TaskStatus } from '../types'
-import { tasks, getDeal, getCompany } from '../data/mockData'
+import { useData } from '../lib/DataContext'
 import { TaskPriorityBadge, TaskStatusBadge, StageBadge, PipelineBadge } from '../components/Badges'
 import { SearchInput, FilterDropdown, EmptyState } from '../components/TableControls'
 
@@ -19,6 +19,7 @@ function getPriorityIndex(p: TaskPriority) { return priorityOrder.indexOf(p) }
 function getStatusIndex(s: TaskStatus) { return statusOrder.indexOf(s) }
 
 export function Actions({ user, onDealClick }: Props) {
+  const { tasks, getDeal, getCompany } = useData()
   const [activeTab, setActiveTab] = useState<'justin' | 'jamey' | 'agent'>(user)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
@@ -33,7 +34,7 @@ export function Actions({ user, onDealClick }: Props) {
     const company = deal ? getCompany(deal.companyId) : t.companyId ? getCompany(t.companyId) : null
     const staleness = deal ? Math.floor((Date.now() - new Date(deal.lastActivityAt).getTime()) / 86400000) : 0
     return { ...t, deal, company, staleness }
-  }), [])
+  }), [tasks, getDeal, getCompany])
 
   // Filter by tab
   const tabTasks = useMemo(() => {

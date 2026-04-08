@@ -242,6 +242,222 @@ export const dealScores: DealScore[] = [
     ],
     recommendation: 'Good deal with the right framing. Meeting tomorrow — push for workshop format (less time), newsletter feature (distribution), and educator title (prestige). The combo of cash + distribution + education funnel is compelling.',
   },
+
+  // ElevenLabs — Sponsored Post (d-3)
+  {
+    dealId: 'd-3', overallGrade: 'A', evaluatedAt: '2026-04-08',
+    dimensions: [
+      { dimension: 'Cash Value', grade: 'A', reasoning: '$15K for a single IG video cross-posted to TikTok. Strong $/hr for short-form content.' },
+      { dimension: 'Brand Prestige', grade: 'S', reasoning: 'ElevenLabs is the AI voice leader. Top-tier brand association. Everyone in AI knows them.' },
+      { dimension: 'Distribution', grade: 'A', reasoning: 'ElevenLabs has massive social reach and will likely reshare. Cross-post to TikTok doubles distribution.' },
+      { dimension: 'Audience Match', grade: 'A', reasoning: 'AI-forward creators and designers overlap heavily with ElevenLabs users. Dubbing v2 is relevant to content creators.' },
+      { dimension: 'Education Funnel', grade: 'B', reasoning: 'Voice/dubbing is adjacent to design workflow but not core. Some pipeline to Maven for "full AI toolkit" positioning.' },
+      { dimension: 'Relationship Compound', grade: 'A', reasoning: 'Working through Kudos Narratives (agency). If this performs well, ElevenLabs has deep pockets for follow-up campaigns.' },
+      { dimension: 'Creative Value', grade: 'A', reasoning: 'Dubbing v2 is genuinely impressive tech. Jamey can create compelling before/after content. Portfolio-worthy.' },
+      { dimension: 'Time Cost', grade: 'S', reasoning: 'Single IG video + TikTok cross-post. 1-2 days of production max. Exceptional $/hr ratio.' },
+      { dimension: 'Strategic Timing', grade: 'A', reasoning: 'AI voice is having its moment. Being associated with the market leader during the wave is smart.' },
+    ],
+    upgradeMoves: [
+      { dimension: 'Education Funnel', currentGrade: 'B', potentialGrade: 'A', move: 'Include a "build your full AI creative workflow" CTA that bridges voice + design into the Maven course narrative.' },
+      { dimension: 'Cash Value', currentGrade: 'A', potentialGrade: 'S', move: 'Negotiate usage rights fee (+40%) since they\'ll likely want to boost the content as paid media. That pushes to $21K.' },
+    ],
+    viabilityPaths: [
+      {
+        name: 'Current Deal', label: 'Path A', overallGrade: 'A', verdict: 'strong',
+        changes: ['IG video + TikTok cross-post featuring Dubbing v2'],
+        whatMakesItWork: 'Brand Prestige (S) + Time Cost (S). Premium brand, minimal effort. The math is obvious.',
+        whatHoldsItBack: 'Agency middleman (Kudos Narratives) means slightly less direct relationship with ElevenLabs team.',
+      },
+      {
+        name: 'Expanded Deal', label: 'Path B', overallGrade: 'S', verdict: 'no-brainer',
+        changes: ['$15K base + $6K usage rights = $21K', 'Add YouTube Short version', 'ElevenLabs reshares on their channels', 'Maven course CTA included'],
+        whatMakesItWork: 'Higher cash, more distribution, education funnel activated.',
+      },
+      {
+        name: 'Dream Version', label: 'Path C', overallGrade: 'S', verdict: 'no-brainer',
+        changes: ['$21K + ongoing ambassador component', 'Featured creator in ElevenLabs showcase', 'Early access to new features', 'Co-branded tutorial series'],
+      },
+    ],
+    positioningAngles: [
+      'The practitioner angle: "I use ElevenLabs to dub my design tutorials into 29 languages. Here\'s how it actually works."',
+      'The creator economy angle: "Your content shouldn\'t be limited by language. This changes everything for global reach."',
+      'The workflow angle: "Dubbing v2 is the missing piece in my AI creative workflow — design, voice, publish."',
+    ],
+    recommendation: 'Take this deal immediately. Brand prestige (S) + time cost (S) is the rare combo where you get premium brand association for minimal effort. Ask for usage rights to bump cash. The agency relationship (Kudos) is fine — perform well and ElevenLabs will come direct next time.',
+  },
+
+  // Grok — QRT Campaign (d-5)
+  {
+    dealId: 'd-5', overallGrade: 'B', evaluatedAt: '2026-04-08',
+    dimensions: [
+      { dimension: 'Cash Value', grade: 'C', reasoning: '$8K for QRTs + organic mentions. Below our usual floor for ongoing content.' },
+      { dimension: 'Brand Prestige', grade: 'B', reasoning: 'Grok/xAI is polarizing. Some see it as cutting-edge, others associate it with X drama. Mixed signal.' },
+      { dimension: 'Distribution', grade: 'A', reasoning: 'X platform boost is likely. QRT format gets algorithmic favor. Grok\'s own reach on X is significant.' },
+      { dimension: 'Audience Match', grade: 'B', reasoning: 'Grok image gen users are more general AI enthusiasts than designers specifically. Partial overlap.' },
+      { dimension: 'Education Funnel', grade: 'C', reasoning: 'Grok image gen is not the pro tool Jamey teaches in Maven. Weak pipeline to course.' },
+      { dimension: 'Relationship Compound', grade: 'B', reasoning: 'xAI is a major player. If relationship builds, the upside is huge. But QRT deals are typically transactional.' },
+      { dimension: 'Creative Value', grade: 'B', reasoning: 'Jamey uses Grok for image gen and likes it. Content would be authentic but QRT format limits creative depth.' },
+      { dimension: 'Time Cost', grade: 'S', reasoning: 'QRTs and organic mentions. Maybe 2-3 hours total. Almost zero effort.' },
+      { dimension: 'Strategic Timing', grade: 'B', reasoning: 'AI image gen is hot but Grok isn\'t the market leader here. No urgency.' },
+    ],
+    upgradeMoves: [
+      { dimension: 'Cash Value', currentGrade: 'C', potentialGrade: 'B', move: 'Counter at $12K. Add a dedicated post comparing Grok image gen to alternatives — more value for them, more cash for us.' },
+      { dimension: 'Education Funnel', currentGrade: 'C', potentialGrade: 'B', move: 'Frame the content around "multi-model workflows" — Grok as one tool in the professional AI design stack, which leads to Maven.' },
+      { dimension: 'Creative Value', currentGrade: 'B', potentialGrade: 'A', move: 'Negotiate a dedicated video/thread instead of just QRTs. Gives Jamey room to showcase real creative process.' },
+    ],
+    viabilityPaths: [
+      {
+        name: 'Current Deal', label: 'Path A', overallGrade: 'B', verdict: 'marginal',
+        changes: ['$8K for QRTs + organic mentions'],
+        whatMakesItWork: 'Time Cost (S) makes almost anything worth doing. Basically free money.',
+        whatHoldsItBack: '$8K is low. Brand signal is mixed. Not building toward anything bigger.',
+      },
+      {
+        name: 'Counter Offer', label: 'Path B', overallGrade: 'B', verdict: 'viable',
+        changes: ['$12K with dedicated thread + QRTs', 'Compare Grok image gen in real workflow', 'Non-exclusive (can still post about competitors)'],
+        whatMakesItWork: 'Better cash, more creative depth, maintains flexibility.',
+      },
+      {
+        name: 'Dream Version', label: 'Path C', overallGrade: 'A', verdict: 'strong',
+        changes: ['$15K dedicated video + QRT series', 'xAI featured creator program', 'Early access to new Grok features', 'Non-exclusive'],
+      },
+    ],
+    positioningAngles: [
+      'The practitioner angle: "I use Grok image gen in my actual workflow. Here\'s when it outperforms everything else."',
+      'The multi-model angle: "The best AI designers don\'t pick one tool — they use the right model for each task."',
+    ],
+    recommendation: 'Marginal at $8K but the time cost is so low it\'s hard to say no. Counter at $12K with a dedicated thread. Walk at $8K only if the content is truly minimal (sub-2 hours). Don\'t let this become a time sink.',
+  },
+
+  // Maven Workshop — AI for E-Commerce Leaders (d-12)
+  {
+    dealId: 'd-12', overallGrade: 'B', evaluatedAt: '2026-04-08',
+    dimensions: [
+      { dimension: 'Cash Value', grade: 'B', reasoning: '$9K estimated (30 students x $300). Decent but depends on enrollment. Only 1 week of promo is risky.' },
+      { dimension: 'Brand Prestige', grade: 'A', reasoning: 'Maven is the gold standard for expert-led courses. Teaching on Maven = instant credibility signal.' },
+      { dimension: 'Distribution', grade: 'B', reasoning: 'Maven has a built-in audience but 1 week of promo limits reach. Need to supplement with Jamey\'s own channels.' },
+      { dimension: 'Audience Match', grade: 'B', reasoning: 'E-commerce leaders are adjacent to Jamey\'s core design audience. Some overlap for AI workflows but not perfect.' },
+      { dimension: 'Education Funnel', grade: 'S', reasoning: 'This IS the education funnel. Workshop students are pre-qualified leads for the full Maven course (Cohort 3). Perfect pipeline.' },
+      { dimension: 'Relationship Compound', grade: 'A', reasoning: 'Mallory from Maven invited Jamey. Strengthens the Maven relationship for Cohort 3. Also onboards sponsors (Flora, Instant).' },
+      { dimension: 'Creative Value', grade: 'A', reasoning: 'Full 6-section workshop brief already drafted. Jamey is excited about the content. Showcases her teaching chops.' },
+      { dimension: 'Time Cost', grade: 'C', reasoning: '3-hour live workshop + prep + promo. Significant time investment, especially with only 1 week to promote.' },
+      { dimension: 'Strategic Timing', grade: 'S', reasoning: 'Pre-Cohort 3 launch. Workshop warms the audience, tests the teaching format, and generates testimonials. Perfect timing.' },
+    ],
+    upgradeMoves: [
+      { dimension: 'Cash Value', currentGrade: 'B', potentialGrade: 'A', move: 'Secure 2 sponsors at $2K each (Flora + Instant) to guarantee $4K floor regardless of enrollment. Total becomes $13K.' },
+      { dimension: 'Distribution', currentGrade: 'B', potentialGrade: 'A', move: 'Start promo immediately on Jamey\'s channels. Don\'t wait for Maven\'s timeline. Build urgency with a waitlist.' },
+      { dimension: 'Time Cost', currentGrade: 'C', potentialGrade: 'B', move: 'Repurpose existing course content for the workshop. Don\'t build from scratch — remix what\'s already proven.' },
+    ],
+    viabilityPaths: [
+      {
+        name: 'Current Deal', label: 'Path A', overallGrade: 'B', verdict: 'viable',
+        changes: ['3-hour workshop, ~30 students @ $300, Apr 16'],
+        whatMakesItWork: 'Education Funnel (S) + Strategic Timing (S). This workshop exists to feed Cohort 3. The $9K is a bonus.',
+        whatHoldsItBack: 'Only 1 week of promo. Time cost is real. If enrollment is low, the ROI drops fast.',
+      },
+      {
+        name: 'Sponsored Version', label: 'Path B', overallGrade: 'A', verdict: 'strong',
+        changes: ['Add Flora.ai + Instant.so as sponsors ($2K each)', 'Start promo now on Jamey\'s channels', 'Record workshop for Maven course B-roll', 'Include Cohort 3 waitlist CTA'],
+        whatMakesItWork: 'Sponsors de-risk the cash. Own-channel promo boosts enrollment. Every attendee is a Cohort 3 lead.',
+      },
+      {
+        name: 'Dream Version', label: 'Path C', overallGrade: 'A', verdict: 'no-brainer',
+        changes: ['50+ students (aggressive promo)', '3 sponsors at $2K each', 'Workshop recording becomes paid replay ($99)', 'Direct Cohort 3 enrollment discount for attendees'],
+      },
+    ],
+    positioningAngles: [
+      'The exclusive access angle: "This is the only time I\'m teaching this live before Cohort 3 launches."',
+      'The practitioner angle: "Learn the exact AI workflows I use for real e-commerce clients — not theory, not demos."',
+      'The urgency angle: "30 spots. 3 hours. The full playbook for AI in e-commerce design."',
+    ],
+    recommendation: 'Do this for the strategic value, not the cash. Education Funnel (S) + Strategic Timing (S) make this a Cohort 3 accelerator. Lock in sponsors immediately to de-risk. Start promoting on Jamey\'s channels today — don\'t wait for Maven\'s 1-week window.',
+  },
+
+  // Flora.ai — Maven Workshop Sponsor (d-13)
+  {
+    dealId: 'd-13', overallGrade: 'C', evaluatedAt: '2026-04-08',
+    dimensions: [
+      { dimension: 'Cash Value', grade: 'C', reasoning: '$2K sponsorship is modest. But it\'s low-effort incremental revenue on top of the workshop.' },
+      { dimension: 'Brand Prestige', grade: 'B', reasoning: 'Flora.ai is growing in the AI commerce space. Niche but respected among e-commerce creators.' },
+      { dimension: 'Distribution', grade: 'C', reasoning: 'Minimal distribution from Flora\'s side. This is Jamey lending her audience to Flora, not the reverse.' },
+      { dimension: 'Audience Match', grade: 'A', reasoning: 'Workshop is AI for E-Commerce Leaders. Flora.ai is an AI e-commerce tool. Perfect topical alignment.' },
+      { dimension: 'Education Funnel', grade: 'B', reasoning: 'Flora demo during workshop reinforces Jamey\'s "I use real tools" credibility. Indirect funnel benefit.' },
+      { dimension: 'Relationship Compound', grade: 'A', reasoning: 'Strong existing relationship. 487 clicks, 178 leads, $1,875 in sales already generated. Weber Wong is a champion.' },
+      { dimension: 'Creative Value', grade: 'C', reasoning: 'Sponsor mention + demo slot. Functional, not creatively exciting.' },
+      { dimension: 'Time Cost', grade: 'A', reasoning: 'Sponsor mention and brief demo during a workshop Jamey is already doing. Near-zero incremental time.' },
+      { dimension: 'Strategic Timing', grade: 'A', reasoning: 'Workshop is Apr 16. Sponsorship needs to be locked in now to include in promo materials.' },
+    ],
+    upgradeMoves: [
+      { dimension: 'Cash Value', currentGrade: 'C', potentialGrade: 'B', move: 'Bundle with ongoing affiliate. $2K sponsorship + rev share on signups from workshop attendees. Could push total to $3-4K.' },
+      { dimension: 'Distribution', currentGrade: 'C', potentialGrade: 'B', move: 'Ask Flora to promote the workshop to their user base. Their users ARE the target audience.' },
+      { dimension: 'Creative Value', currentGrade: 'C', potentialGrade: 'B', move: 'Make the Flora demo a full 10-min case study segment, not just a mention. More valuable for both sides.' },
+    ],
+    viabilityPaths: [
+      {
+        name: 'Current Deal', label: 'Path A', overallGrade: 'C', verdict: 'viable',
+        changes: ['$2K sponsor mention + demo during workshop'],
+        whatMakesItWork: 'Time Cost (A) — it\'s incremental money for near-zero effort. Existing relationship makes it easy.',
+        whatHoldsItBack: '$2K is small. If Flora doesn\'t promote the workshop, it\'s a one-way value exchange.',
+      },
+      {
+        name: 'Expanded Deal', label: 'Path B', overallGrade: 'B', verdict: 'viable',
+        changes: ['$2K sponsorship + affiliate rev share', 'Flora promotes workshop to their users', '10-min demo segment (not just mention)', 'Post-workshop email with Flora CTA'],
+        whatMakesItWork: 'More cash, mutual distribution, deeper integration.',
+      },
+      {
+        name: 'Dream Version', label: 'Path C', overallGrade: 'B', verdict: 'strong',
+        changes: ['$3K sponsorship + rev share', 'Flora co-hosts promo (email their list)', 'Case study segment in workshop', 'Ongoing ambassador deal after workshop'],
+      },
+    ],
+    positioningAngles: [
+      'The authentic angle: "I\'ve already driven 487 clicks and 178 leads for Flora. This is a proven partnership, not a test."',
+      'The e-commerce angle: "Flora.ai is powering the next wave of AI commerce. I\'m showing my students the tools that actually work."',
+    ],
+    recommendation: 'Easy yes at $2K for near-zero effort. But push for Flora to co-promote the workshop — their user base IS the target audience. The real value is deepening the relationship for a bigger ambassador deal post-workshop. Track the metrics.',
+  },
+
+  // Instant.so — Maven Workshop Sponsor (d-14)
+  {
+    dealId: 'd-14', overallGrade: 'C', evaluatedAt: '2026-04-08',
+    dimensions: [
+      { dimension: 'Cash Value', grade: 'C', reasoning: '$2K sponsorship. Same modest tier as Flora. Incremental revenue on existing workshop.' },
+      { dimension: 'Brand Prestige', grade: 'C', reasoning: 'Instant.so is early-stage. Not widely known yet. Low prestige signal but no downside either.' },
+      { dimension: 'Distribution', grade: 'D', reasoning: 'Instant.so has minimal reach. Very early company. Almost no distribution benefit.' },
+      { dimension: 'Audience Match', grade: 'B', reasoning: 'AI website builder is relevant to e-commerce leaders, though more of a tool demo than a perfect fit.' },
+      { dimension: 'Education Funnel', grade: 'B', reasoning: 'Showing Instant.so in workshop demonstrates "ship fast with AI" — relevant to Maven course narrative.' },
+      { dimension: 'Relationship Compound', grade: 'B', reasoning: 'Sam confirmed interest quickly. Jamey has early access to AI features. Could grow if Instant.so takes off.' },
+      { dimension: 'Creative Value', grade: 'C', reasoning: 'Sponsor slot. Demo is functional but not showcase-worthy.' },
+      { dimension: 'Time Cost', grade: 'A', reasoning: 'Brief demo during existing workshop. Near-zero incremental effort.' },
+      { dimension: 'Strategic Timing', grade: 'B', reasoning: 'Needs to be locked in for Apr 16 workshop. Moderate urgency.' },
+    ],
+    upgradeMoves: [
+      { dimension: 'Cash Value', currentGrade: 'C', potentialGrade: 'B', move: 'Propose $2K sponsorship + affiliate code for workshop attendees. Track signups for upsell data.' },
+      { dimension: 'Brand Prestige', currentGrade: 'C', potentialGrade: 'B', move: 'If Instant.so launches their AI features publicly, being an early showcase creator boosts the prestige signal.' },
+      { dimension: 'Distribution', currentGrade: 'D', potentialGrade: 'C', move: 'Ask Instant.so to share the workshop on their channels. Even small reach helps with a niche audience.' },
+    ],
+    viabilityPaths: [
+      {
+        name: 'Current Deal', label: 'Path A', overallGrade: 'C', verdict: 'marginal',
+        changes: ['$2K sponsor mention + demo during workshop'],
+        whatMakesItWork: 'Time Cost (A) — free money on an existing event. Sam is responsive and easy to work with.',
+        whatHoldsItBack: 'Low prestige, no distribution, modest cash. It\'s filler, not a feature.',
+      },
+      {
+        name: 'Expanded Deal', label: 'Path B', overallGrade: 'B', verdict: 'viable',
+        changes: ['$2K sponsorship + affiliate tracking', 'Instant.so provides premium accounts for attendees', 'Full demo segment showing AI website builder', 'Post-workshop follow-up with Instant.so CTA'],
+        whatMakesItWork: 'Attendee perks add value to workshop. Affiliate creates ongoing revenue stream.',
+      },
+      {
+        name: 'Dream Version', label: 'Path C', overallGrade: 'B', verdict: 'viable',
+        changes: ['$3K sponsorship', 'Instant.so co-branded landing page for workshop', 'Early access program for attendees', 'Follow-up sponsored post if workshop performs'],
+      },
+    ],
+    positioningAngles: [
+      'The builder angle: "I shipped a client website in 15 minutes with Instant.so during a live workshop. The audience lost it."',
+      'The early-access angle: "I\'m testing AI features before they\'re public. Here\'s what\'s coming."',
+    ],
+    recommendation: 'Take the $2K — it\'s free money on an event Jamey is already doing. But don\'t over-invest in the relationship until Instant.so proves distribution value. Email Sam the sponsorship proposal with tiers today — Apr 16 deadline is tight.',
+  },
 ]
 
 export const getDealScore = (dealId: string) => dealScores.find(s => s.dealId === dealId)

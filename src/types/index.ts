@@ -54,6 +54,7 @@ export type DealType =
   | 'Brand Design'
   | 'Consulting'
   | 'Speaking'
+  | 'Workshop'
 
 // Map deal types → pipelines
 export const DEAL_TYPE_PIPELINE: Record<DealType, PipelineId> = {
@@ -67,6 +68,7 @@ export const DEAL_TYPE_PIPELINE: Record<DealType, PipelineId> = {
   'Brand Design': 'service',
   'Consulting': 'service',
   'Speaking': 'service',
+  'Workshop': 'service',
 }
 
 // Ordered stages per pipeline (for kanban rendering + progression)
@@ -141,13 +143,13 @@ export interface Deal {
   id: string
   name: string
   companyId: string
-  contactId?: string
+  contactId?: string  // DEPRECATED: Use deal_contacts junction table
   pipeline: PipelineId
   stage: string
   type: DealType
   priority: DealPriority
-  value?: number
-  closedValue?: number
+  value?: number          // Single source of truth — estimate until contracted_at is set
+  closedValue?: number    // DEPRECATED: Use value + contractedAt
   platforms?: string[]
   deliverables?: string
   terms?: string
@@ -157,7 +159,81 @@ export interface Deal {
   lastActivityAt: string
   expectedCloseDate?: string
   closedAt?: string
+  contractedAt?: string   // When value became a real contracted number
+  lostReason?: string
+  currency?: string
   owner: 'justin' | 'jamey' | 'both'
+}
+
+// ── Deal Contacts (M:N junction) ──
+export type DealContactRole = 'primary' | 'decision_maker' | 'creative_lead' | 'finance' | 'legal' | 'contact'
+
+export interface DealContact {
+  id: string
+  dealId: string
+  personId: string
+  role: DealContactRole
+  isPrimary: boolean
+  notes?: string
+}
+
+// ── Person-Company (M:N junction) ──
+export interface PersonCompany {
+  id: string
+  personId: string
+  companyId: string
+  role?: string
+  isPrimary: boolean
+}
+
+// ── Activity-People (M:N junction) ──
+export interface ActivityPerson {
+  id: string
+  activityId: string
+  personId: string
+}
+
+// ── Activity-Deals (M:N junction) ──
+export interface ActivityDeal {
+  id: string
+  activityId: string
+  dealId: string
+}
+
+// ── Attachments ──
+export type AttachmentType = 'brief' | 'contract' | 'invoice' | 'deliverable' | 'proposal' | 'rate_card' | 'other'
+
+export interface Attachment {
+  id: string
+  dealId?: string
+  companyId?: string
+  fileType: AttachmentType
+  fileName: string
+  fileSize?: number
+  mimeType?: string
+  storagePath: string
+  publicUrl?: string
+  description?: string
+  uploadedBy?: 'justin' | 'jamey' | 'agent' | 'system'
+  createdAt: string
+}
+
+// ── Company Relationships ──
+export type CompanyRelationType = 'parent_subsidiary' | 'agency_client' | 'partner' | 'reseller'
+
+export interface CompanyRelationship {
+  id: string
+  parentCompanyId: string
+  childCompanyId: string
+  relationshipType: CompanyRelationType
+  notes?: string
+}
+
+// ── Tags ──
+export interface Tag {
+  id: string
+  name: string
+  color?: string
 }
 
 // ── Tasks ──
@@ -281,4 +357,4 @@ export interface EmailThread {
 
 // ── App ──
 export type User = 'justin' | 'jamey'
-export type ViewId = 'dashboard' | 'deals' | 'companies' | 'people' | 'tasks' | 'activity'
+export type ViewId = 'dashboard' | 'deals' | 'companies' | 'people' | 'tasks' | 'activity' | 'collateral'

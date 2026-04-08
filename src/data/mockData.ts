@@ -12,6 +12,9 @@ export const companies: Company[] = [
   { id: 'co-9', name: 'Higgsfield', domain: 'higgsfield.ai', industry: 'AI Video' },
   { id: 'co-10', name: 'Freepik', domain: 'freepik.com', industry: 'Design Assets' },
   { id: 'co-11', name: 'Lovable', domain: 'lovable.dev', industry: 'AI Dev Tools' },
+  { id: 'co-12', name: 'Maven', domain: 'maven.com', industry: 'Education Platform' },
+  { id: 'co-13', name: 'Flora.ai', domain: 'flora.ai', industry: 'AI E-Commerce' },
+  { id: 'co-14', name: 'Instant.so', domain: 'instant.so', industry: 'AI E-Commerce' },
 ]
 
 export const people: Person[] = [
@@ -26,6 +29,9 @@ export const people: Person[] = [
   { id: 'pe-9', name: 'Mika Tanaka', email: 'mika@higgsfield.ai', role: 'CEO', companyId: 'co-9', notes: 'Via Shown Media' },
   { id: 'pe-10', name: 'Carlos Ruiz', email: 'carlos@freepik.com', role: 'Influencer Ops', companyId: 'co-10' },
   { id: 'pe-11', name: 'Emma Wright', email: 'emma@lovable.dev', role: 'Marketing Lead', companyId: 'co-11' },
+  { id: 'pe-12', name: 'Mallory Contois', email: 'mallory@maven.com', role: 'Creator Partnerships', companyId: 'co-12', notes: 'Invited Jamey to run Maven workshop. Also: Delaney Niermann (operations).' },
+  { id: 'pe-13', name: 'Weber Wong', email: 'weber@flora.ai', role: 'Founder', companyId: 'co-13', notes: 'Jamey gets 1M credits/mo. 487 clicks / 178 leads / $1,875 in sales generated for Flora.' },
+  { id: 'pe-14', name: 'Sam van Hees', email: 'sam@instant.so', role: 'Founder', companyId: 'co-14', notes: 'Jamey has early access to AI features. Said "yes sounds good!" to sponsorship — email sam@instant.so.' },
 ]
 
 export const deals: Deal[] = [
@@ -126,6 +132,34 @@ export const deals: Deal[] = [
 
   // ── Service Pipeline ──
   {
+    id: 'd-12', name: 'Maven Workshop — AI for E-Commerce Leaders', companyId: 'co-12', contactId: 'pe-12',
+    pipeline: 'service', stage: 'Scoping Call', type: 'Speaking', priority: 'High',
+    value: 9000, platforms: ['Maven'],
+    deliverables: '3-hour live workshop: AI for E-Commerce Leaders crash course, Apr 16',
+    terms: '~30 students @ $300 = ~$9K. Only 1 week of promo. Delaney recommended 3hr @ $300. Need attendance story + sponsorship tiers before emailing sponsors.',
+    notes: 'Mallory from Maven invited Jamey. Jamey drafted full 6-section workshop brief. Flora.ai and Instant.so as potential sponsors. Instant.so confirmed interest (Sam: "yes sounds good, send to sam@instant.so").',
+    jameyUsesProduct: true, owner: 'both',
+    createdAt: '2026-04-07', lastActivityAt: '2026-04-08', expectedCloseDate: '2026-04-16',
+  },
+  {
+    id: 'd-13', name: 'Flora.ai — Maven Workshop Sponsor', companyId: 'co-13', contactId: 'pe-13',
+    pipeline: 'partnership', stage: 'Inbound', type: 'Brand Ambassador', priority: 'Medium',
+    value: 2000, platforms: ['Maven'],
+    deliverables: 'Workshop sponsor mention + demo during AI for E-Commerce Leaders session',
+    terms: 'Jamey DM\'d Weber Wong. Flora gives 1M credits/mo. 487 clicks / 178 leads / $1,875 in sales so far. Strong existing relationship.',
+    jameyUsesProduct: true, owner: 'jamey',
+    createdAt: '2026-04-08', lastActivityAt: '2026-04-08',
+  },
+  {
+    id: 'd-14', name: 'Instant.so — Maven Workshop Sponsor', companyId: 'co-14', contactId: 'pe-14',
+    pipeline: 'partnership', stage: 'Inbound', type: 'Brand Ambassador', priority: 'High',
+    value: 2000, platforms: ['Maven'],
+    deliverables: 'Workshop sponsor mention + demo during AI for E-Commerce Leaders session',
+    terms: 'Sam confirmed interest via DM. Need to email sam@instant.so with sponsorship proposal + tiers. Jamey has early access to AI features.',
+    jameyUsesProduct: true, owner: 'both',
+    createdAt: '2026-04-08', lastActivityAt: '2026-04-08',
+  },
+  {
     id: 'd-8', name: 'Block Brand Identity', companyId: 'co-8', contactId: 'pe-8',
     pipeline: 'service', stage: 'Invoiced', type: 'Creative Direction', priority: 'High',
     value: 5000, closedValue: 5000,
@@ -148,6 +182,13 @@ export const tasks: Task[] = [
   { id: 't-10', title: 'Prep for Freepik meeting', description: 'Meeting Apr 9. Research creator program, prepare talking points.', status: 'To Do', priority: 'Urgent', assignee: 'justin', dealId: 'd-10', dueDate: '2026-04-09', createdAt: '2026-04-08', createdBy: 'agent' },
   { id: 't-11', title: 'Counter Lovable at $20K', description: 'They offered $15K. Floor $18K. Figma-to-code workflow angle.', status: 'In Progress', priority: 'Urgent', assignee: 'justin', dealId: 'd-11', dueDate: '2026-04-09', createdAt: '2026-04-07', createdBy: 'justin' },
   { id: 't-12', title: 'Record Lovable demo video', description: '2 min screen recording of Jamey using Lovable. Helps close deal.', status: 'To Do', priority: 'High', assignee: 'jamey', dealId: 'd-11', dueDate: '2026-04-12', createdAt: '2026-04-08', createdBy: 'justin' },
+  // Maven Workshop
+  { id: 't-13', title: 'Build attendance estimate for Maven workshop', description: 'Need concrete attendance story before approaching sponsors. Workshop is Apr 16, only 1 week of promo. ~30 students @ $300 = ~$9K estimate.', status: 'To Do', priority: 'Urgent', assignee: 'justin', dealId: 'd-12', dueDate: '2026-04-09', createdAt: '2026-04-08', createdBy: 'justin' },
+  { id: 't-14', title: 'Create sponsorship tiers for Maven workshop', description: 'Build tiered sponsorship proposal (mention, demo slot, logo placement, etc.) for Flora.ai and Instant.so before emailing Sam.', status: 'To Do', priority: 'Urgent', assignee: 'justin', dealId: 'd-12', dueDate: '2026-04-09', createdAt: '2026-04-08', createdBy: 'justin' },
+  { id: 't-15', title: 'Email Instant.so sponsorship proposal', description: 'Sam confirmed interest via DM ("yes sounds good! send to sam@instant.so"). Need attendance story + tiers first. BLOCKED on t-13 and t-14.', status: 'Waiting', priority: 'Urgent', assignee: 'justin', dealId: 'd-14', dueDate: '2026-04-10', createdAt: '2026-04-08', createdBy: 'justin' },
+  { id: 't-16', title: 'Send Flora.ai sponsorship proposal', description: 'Jamey DM\'d Weber Wong. Follow up with formal proposal. Leverage existing stats: 487 clicks, 178 leads, $1,875 in sales.', status: 'To Do', priority: 'High', assignee: 'jamey', dealId: 'd-13', dueDate: '2026-04-10', createdAt: '2026-04-08', createdBy: 'justin' },
+  { id: 't-17', title: 'Submit workshop description to Maven', description: 'Delaney asked for workshop description. Jamey drafted a 6-section brief. Finalize and send.', status: 'In Progress', priority: 'Urgent', assignee: 'jamey', dealId: 'd-12', dueDate: '2026-04-09', createdAt: '2026-04-08', createdBy: 'justin' },
+  { id: 't-18', title: 'Confirm Maven workshop logistics', description: 'Apr 16, 3 hours, $300 price point. Confirm exact time, platform setup, promo materials from Maven.', status: 'To Do', priority: 'High', assignee: 'justin', dealId: 'd-12', dueDate: '2026-04-10', createdAt: '2026-04-08', createdBy: 'justin' },
 ]
 
 export const activities: Activity[] = [
@@ -168,6 +209,12 @@ export const activities: Activity[] = [
   { id: 'a-11', type: 'stage_change', title: 'Envato advanced to Negotiating', dealId: 'd-1', companyId: 'co-1', createdBy: 'justin', timestamp: '2026-04-06T09:00:00Z' },
   { id: 'a-12', type: 'note', title: 'Reve.art deal evaluation completed — A-tier', dealId: 'd-7', companyId: 'co-7', createdBy: 'justin', timestamp: '2026-04-08T10:00:00Z' },
   { id: 'a-13', type: 'task_created', title: 'Agent: Prep for Freepik meeting', dealId: 'd-10', companyId: 'co-10', createdBy: 'agent', timestamp: '2026-04-08T07:00:00Z' },
+  // Maven Workshop
+  { id: 'a-18', type: 'email_received', title: 'Maven invited Jamey to run a workshop (Mallory Contois + Delaney Niermann)', dealId: 'd-12', companyId: 'co-12', personId: 'pe-12', createdBy: 'system', timestamp: '2026-04-07T10:00:00Z' },
+  { id: 'a-19', type: 'note', title: 'Jamey drafted full workshop brief: "AI for E-Commerce Leaders" — 3hr crash course @ $300', dealId: 'd-12', companyId: 'co-12', createdBy: 'jamey', timestamp: '2026-04-08T14:00:00Z' },
+  { id: 'a-20', type: 'email_sent', title: 'Jamey DM\'d Weber Wong (Flora.ai) re: sponsoring Maven workshop', dealId: 'd-13', companyId: 'co-13', personId: 'pe-13', createdBy: 'jamey', timestamp: '2026-04-08T15:00:00Z' },
+  { id: 'a-21', type: 'email_received', title: 'Instant.so — Sam confirmed interest: "yes sounds good! send to sam@instant.so"', dealId: 'd-14', companyId: 'co-14', personId: 'pe-14', createdBy: 'system', timestamp: '2026-04-08T16:00:00Z' },
+  { id: 'a-22', type: 'task_created', title: 'Created Maven workshop task chain: attendance story → sponsorship tiers → email sponsors', dealId: 'd-12', companyId: 'co-12', createdBy: 'justin', timestamp: '2026-04-08T17:00:00Z' },
 ]
 
 export const deliverables: Deliverable[] = [

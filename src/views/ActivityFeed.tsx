@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import type { ActivityType } from '../types'
-import { activities, getDeal, getCompany, getPerson } from '../data/mockData'
+import { useData } from '../lib/DataContext'
 import { ActivityIcon } from '../components/Badges'
 import { SearchInput, FilterDropdown, ResultCount, EmptyState } from '../components/TableControls'
 
@@ -20,13 +20,14 @@ const ACTIVITY_TYPE_LABELS: Record<ActivityType, string> = {
 }
 
 export function ActivityFeed({ onDealClick }: Props) {
+  const { activities, getDeal, getCompany, getPerson } = useData()
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [creatorFilter, setCreatorFilter] = useState('')
 
   const sorted = useMemo(() =>
     [...activities].sort((a, b) => +new Date(b.timestamp) - +new Date(a.timestamp)),
-  [])
+  [activities])
 
   // Type options with counts
   const typeOptions = useMemo(() => {
@@ -35,13 +36,13 @@ export function ActivityFeed({ onDealClick }: Props) {
     return [...map.entries()]
       .sort((a, b) => b[1] - a[1])
       .map(([v, count]) => ({ value: v, label: ACTIVITY_TYPE_LABELS[v as ActivityType] || v, count }))
-  }, [])
+  }, [activities])
 
   // Creator options
   const creatorOptions = useMemo(() => {
     const set = new Set(activities.map(a => a.createdBy))
     return [...set].map(v => ({ value: v, label: v.charAt(0).toUpperCase() + v.slice(1) }))
-  }, [])
+  }, [activities])
 
   // Filter + search
   const filtered = useMemo(() => {

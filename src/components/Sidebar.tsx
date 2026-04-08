@@ -1,19 +1,21 @@
 import type { ViewId, User } from '../types'
-import { tasks } from '../data/mockData'
+import { useData } from '../lib/DataContext'
 
 const navItems: { id: ViewId; label: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '⊞' },
+  { id: 'activity', label: 'Activity', icon: '↻' },
   { id: 'deals', label: 'Deals', icon: '◈' },
   { id: 'tasks', label: 'Tasks', icon: '☑' },
   { id: 'companies', label: 'Companies', icon: '⌂' },
   { id: 'people', label: 'People', icon: '⊙' },
-  { id: 'activity', label: 'Activity', icon: '↻' },
+  { id: 'collateral', label: 'Collateral', icon: '◎' },
 ]
 
 const sections = [
   { label: 'OVERVIEW', items: ['dashboard', 'activity'] },
   { label: 'PIPELINE', items: ['deals', 'tasks'] },
   { label: 'CONTACTS', items: ['companies', 'people'] },
+  { label: 'CONTENT', items: ['collateral'] },
 ]
 
 interface Props {
@@ -24,6 +26,7 @@ interface Props {
 }
 
 export function Sidebar({ view, setView, user, setUser }: Props) {
+  const { tasks } = useData()
   const myTasks = tasks.filter(t =>
     t.status !== 'Done' && t.status !== 'Cancelled' &&
     (t.assignee === user || t.assignee === ('both' as unknown as string))

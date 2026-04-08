@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
-import type { PipelineId, Deal, DealPriority } from '../types'
+import type { PipelineId, DealPriority } from '../types'
 import { PIPELINE_LABELS, PIPELINE_STAGES, PIPELINE_COLORS } from '../types'
-import { deals as initialDeals, getCompany } from '../data/mockData'
+import { useData } from '../lib/DataContext'
 import { DealCard } from '../components/DealCard'
 import { SearchInput, FilterDropdown } from '../components/TableControls'
 
@@ -10,8 +10,8 @@ interface Props {
 }
 
 export function Pipeline({ onDealClick }: Props) {
+  const { deals, updateDeal, getCompany } = useData()
   const [activePipeline, setActivePipeline] = useState<PipelineId>('content')
-  const [dealState, setDealState] = useState<Deal[]>(initialDeals)
   const [dragId, setDragId] = useState<string | null>(null)
   const [dropTarget, setDropTarget] = useState<string | null>(null)
   const dragCounter = useRef<Record<string, number>>({})
@@ -35,7 +35,7 @@ export function Pipeline({ onDealClick }: Props) {
   ], [])
 
   const pipelineDeals = useMemo(() => {
-    let result = dealState.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
+    let result = deals.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
     if (search) {
       const q = search.toLowerCase()
       result = result.filter(d => {
@@ -46,10 +46,10 @@ export function Pipeline({ onDealClick }: Props) {
     if (priorityFilter) result = result.filter(d => d.priority === priorityFilter)
     if (ownerFilter) result = result.filter(d => d.owner === ownerFilter)
     return result
-  }, [dealState, activePipeline, search, priorityFilter, ownerFilter])
+  }, [deals, activePipeline, search, priorityFilter, ownerFilter, getCompany])
 
   const totalValue = pipelineDeals.reduce((s, d) => s + (d.value ?? 0), 0)
-  const lostDeals = dealState.filter(d => d.pipeline === activePipeline && d.stage === 'Lost')
+  const lostDeals = deals.filter(d => d.pipeline === activePipeline && d.stage === 'Lost')
 
   const handleDragStart = (dealId: string) => {
     setDragId(dealId)
@@ -76,19 +76,14 @@ export function Pipeline({ onDealClick }: Props) {
 
   const handleDrop = (targetStage: string) => {
     if (!dragId) return
-    setDealState(prev =>
-      prev.map(d =>
-        d.id === dragId
-          ? { ...d, stage: targetStage, lastActivityAt: new Date().toISOString() }
-          : d
-      )
-    )
+    // Persist to Supabase via DataContext
+    updateDeal(dragId, { stage: targetStage })
     setDragId(null)
     setDropTarget(null)
     dragCounter.current = {}
   }
 
-  const draggedDeal = dragId ? dealState.find(d => d.id === dragId) : null
+  const draggedDeal = dragId ? deals.find(d => d.id === dragId) : null
 
   return (
     <div className="p-6">
@@ -125,7 +120,7 @@ export function Pipeline({ onDealClick }: Props) {
         <FilterDropdown label="Owner" options={ownerOptions} value={ownerFilter} onChange={setOwnerFilter} />
       </div>
 
-      {/* Kanban — horizontal scroll on all sizes, cards stack naturally */}
+      {/* Kanban */}
       <div className="flex gap-3 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0">
         {stages.map(stage => {
           const stageDeals = pipelineDeals.filter(d => d.stage === stage)

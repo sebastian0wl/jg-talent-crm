@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { people, companies, getCompany, getDealsForCompany } from '../data/mockData'
+import { useData } from '../lib/DataContext'
 import { SearchInput, FilterDropdown, SortHeader, useSort, ResultCount, EmptyState } from '../components/TableControls'
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
 type SortKey = 'name' | 'company' | 'role' | 'email' | 'deals'
 
 export function People({ onDealClick }: Props) {
+  const { people, companies, getCompany, getDealsForCompany } = useData()
   const [search, setSearch] = useState('')
   const [companyFilter, setCompanyFilter] = useState('')
   const { sortKey, sortDir, toggleSort } = useSort<SortKey>('name')
@@ -17,7 +18,7 @@ export function People({ onDealClick }: Props) {
     const company = getCompany(p.companyId)
     const companyDeals = getDealsForCompany(p.companyId)
     return { ...p, company, companyDeals, dealCount: companyDeals.length }
-  }), [])
+  }), [people, getCompany, getDealsForCompany])
 
   // Company options
   const companyOptions = useMemo(() =>
@@ -25,7 +26,7 @@ export function People({ onDealClick }: Props) {
       .map(c => ({ value: c.id, label: c.name, count: people.filter(p => p.companyId === c.id).length }))
       .filter(c => c.count > 0)
       .sort((a, b) => b.count - a.count),
-  [])
+  [companies, people])
 
   // Filter + search
   const filtered = useMemo(() => {
