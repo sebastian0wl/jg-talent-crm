@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f5f3ff;
+  --color-brand-100: #ede9fe;
+  --color-brand-200: #ddd6fe;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+  --color-brand-700: #6d28d9;
+  --color-brand-800: #5b21b6;
+  --color-brand-900: #4c1d95;
+
+  --color-surface: #09090b;
+  --color-surface-raised: #141418;
+  --color-surface-overlay: #1c1c24;
+  --color-surface-card: #18181f;
+  --color-border: #27272a;
+  --color-border-subtle: #1f1f26;
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #52525b;
+
+  --color-status-prospect: #6b7280;
+  --color-status-warm: #3b82f6;
+  --color-status-meeting: #f59e0b;
+  --color-status-scoping: #f97316;
+  --color-status-negotiating: #eab308;
+  --color-status-won: #22c55e;
+  --color-status-lost: #ef4444;
+  --color-status-hold: #71717a;
+
+  --color-priority-urgent: #ef4444;
+  --color-priority-high: #ef4444;
+  --color-priority-medium: #f59e0b;
+  --color-priority-low: #6b7280;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a transparent;
+}
