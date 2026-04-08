@@ -1,80 +1,67 @@
 import type { Deal } from '../types'
-import { StatusBadge, PriorityDot, DealTypeBadge } from './Badges'
+import { STAGE_GATES } from '../types'
+import { StageBadge, PriorityBadge, PipelineBadge } from './Badges'
+import { getCompany, getTasksForDeal } from '../data/mockData'
 
 interface Props {
   deal: Deal
   onClick: (id: string) => void
-  compact?: boolean
 }
 
-export function DealCard({ deal, onClick, compact }: Props) {
-  const daysSinceContact = deal.firstContact
-    ? Math.floor((Date.now() - new Date(deal.firstContact).getTime()) / 86400000)
-    : null
-
-  const value = deal.finalRate ?? deal.pipelineValue ?? deal.quotedRate
-
-  if (compact) {
-    return (
-      <button
-        onClick={() => onClick(deal.id)}
-        className="w-full text-left p-3 rounded-lg bg-surface-card border border-border hover:border-brand-500/40 transition-colors"
-      >
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-medium text-text-primary truncate">{deal.brand}</span>
-          <PriorityDot priority={deal.priority} />
-        </div>
-        <div className="flex items-center gap-2 text-xs text-text-muted">
-          <DealTypeBadge type={deal.dealType} />
-          {value && <span className="text-text-secondary">${(value / 1000).toFixed(0)}K</span>}
-        </div>
-      </button>
-    )
-  }
+export function DealCard({ deal, onClick }: Props) {
+  const company = getCompany(deal.companyId)
+  const openTasks = getTasksForDeal(deal.id).filter(t => t.status !== 'Done' && t.status !== 'Cancelled')
+  const daysSince = Math.floor((Date.now() - new Date(deal.lastActivityAt).getTime()) / 86400000)
+  const gate = STAGE_GATES[deal.stage]
 
   return (
     <button
       onClick={() => onClick(deal.id)}
-      className="w-full text-left p-4 rounded-xl bg-surface-card border border-border hover:border-brand-500/40 transition-all group"
+      className="w-full text-left p-3.5 rounded-xl bg-surface border border-border hover:border-brand-300 hover:shadow-sm transition-all group"
     >
-      <div className="flex items-start justify-between mb-2">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-1.5">
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-text-primary truncate group-hover:text-brand-400 transition-colors">
-            {deal.brand}
+          <h3 className="text-[13px] font-semibold text-text-primary truncate group-hover:text-brand-700 transition-colors">
+            {company?.name ?? deal.name}
           </h3>
-          <p className="text-xs text-text-muted truncate mt-0.5">{deal.name}</p>
+          <p className="text-[11px] text-text-muted truncate">{deal.type}</p>
         </div>
-        <PriorityDot priority={deal.priority} />
+        <PriorityBadge priority={deal.priority} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 mb-2">
-        <DealTypeBadge type={deal.dealType} />
-        <StatusBadge status={deal.status} />
-      </div>
-
-      <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center gap-3 text-text-muted">
-          {value && (
-            <span className="text-text-secondary font-medium">
-              ${value.toLocaleString()}
-            </span>
-          )}
-          {deal.platforms.length > 0 && (
-            <span>{deal.platforms.join(', ')}</span>
-          )}
-        </div>
-        {daysSinceContact !== null && (
-          <span className={`${daysSinceContact > 7 ? 'text-red-400' : 'text-text-muted'}`}>
-            {daysSinceContact}d ago
+      {/* Value + Stage */}
+      <div className="flex items-center gap-1.5 mb-2">
+        <StageBadge stage={deal.stage} pipeline={deal.pipeline} />
+        {deal.value && (
+          <span className="text-[11px] font-semibold text-text-primary">
+            ${(deal.value / 1000).toFixed(0)}K
           </span>
         )}
       </div>
 
-      {deal.actionIds.length > 0 && (
-        <div className="mt-2 pt-2 border-t border-border-subtle">
-          <span className="text-xs text-brand-400">{deal.actionIds.length} action{deal.actionIds.length !== 1 ? 's' : ''}</span>
+      {/* Next action gate */}
+      {gate && (
+        <div className="bg-surface-muted rounded-md px-2 py-1.5 mb-2">
+          <p className="text-[10px] text-text-muted">Next step</p>
+          <p className="text-[11px] text-text-secondary font-medium">{gate}</p>
         </div>
       )}
+
+      {/* Footer */}
+      <div className="flex items-center justify-between text-[10px] text-text-muted">
+        <div className="flex items-center gap-2">
+          {openTasks.length > 0 && (
+            <span className="text-brand-600 font-medium">{openTasks.length} task{openTasks.length !== 1 ? 's' : ''}</span>
+          )}
+          {deal.platforms && deal.platforms.length > 0 && (
+            <span>{deal.platforms.join(', ')}</span>
+          )}
+        </div>
+        <span className={daysSince > 7 ? 'text-red-500 font-medium' : ''}>
+          {daysSince === 0 ? 'Today' : `${daysSince}d ago`}
+        </span>
+      </div>
     </button>
   )
 }

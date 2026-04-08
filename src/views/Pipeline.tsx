@@ -1,4 +1,6 @@
-import type { DealStatus } from '../types'
+import { useState } from 'react'
+import type { PipelineId } from '../types'
+import { PIPELINE_LABELS, PIPELINE_STAGES, PIPELINE_COLORS } from '../types'
 import { deals } from '../data/mockData'
 import { DealCard } from '../components/DealCard'
 
@@ -6,51 +8,66 @@ interface Props {
   onDealClick: (id: string) => void
 }
 
-const columns: { status: DealStatus; color: string }[] = [
-  { status: 'Prospect', color: 'border-zinc-600' },
-  { status: 'Warm Lead', color: 'border-blue-500' },
-  { status: 'Initial Meeting', color: 'border-amber-500' },
-  { status: 'Scoping', color: 'border-orange-500' },
-  { status: 'Negotiating', color: 'border-yellow-500' },
-  { status: 'Closed Won', color: 'border-green-500' },
-]
-
 export function Pipeline({ onDealClick }: Props) {
+  const [activePipeline, setActivePipeline] = useState<PipelineId>('content')
+  const pipelines: PipelineId[] = ['content', 'partnership', 'service']
+
+  const pipelineDeals = deals.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
+  const stages = PIPELINE_STAGES[activePipeline]
+  const totalValue = pipelineDeals.reduce((s, d) => s + (d.value ?? 0), 0)
+
+  const lostDeals = deals.filter(d => d.pipeline === activePipeline && d.stage === 'Lost')
+
   return (
     <div className="p-6">
-      <div className="mb-5">
-        <h1 className="text-xl font-semibold text-text-primary">Deal Pipeline</h1>
-        <p className="text-sm text-text-muted mt-0.5">Kanban view — drag mentally, click to open</p>
+      {/* Pipeline Tabs */}
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <h1 className="text-xl font-semibold text-text-primary">Deal Pipeline</h1>
+          <p className="text-sm text-text-muted">{pipelineDeals.length} deals — ${(totalValue / 1000).toFixed(0)}K total value</p>
+        </div>
+        <div className="flex gap-1 bg-surface-muted p-1 rounded-lg">
+          {pipelines.map(pid => (
+            <button
+              key={pid}
+              onClick={() => setActivePipeline(pid)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                activePipeline === pid
+                  ? 'bg-white text-text-primary shadow-sm'
+                  : 'text-text-muted hover:text-text-secondary'
+              }`}
+            >
+              <span className="inline-block w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: PIPELINE_COLORS[pid] }} />
+              {PIPELINE_LABELS[pid]}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {columns.map(col => {
-          const colDeals = deals.filter(d => d.status === col.status)
-          const colValue = colDeals.reduce((sum, d) => sum + (d.pipelineValue ?? d.finalRate ?? 0), 0)
+      {/* Kanban */}
+      <div className="flex gap-3 overflow-x-auto pb-4">
+        {stages.map(stage => {
+          const stageDeals = pipelineDeals.filter(d => d.stage === stage)
+          const stageValue = stageDeals.reduce((s, d) => s + (d.value ?? 0), 0)
 
           return (
-            <div key={col.status} className="w-72 shrink-0">
-              <div className={`border-t-2 ${col.color} rounded-t-lg bg-surface-raised border-x border-b border-border rounded-b-xl`}>
-                <div className="p-3 border-b border-border">
+            <div key={stage} className="w-[260px] shrink-0">
+              <div className="bg-surface-muted rounded-xl">
+                <div className="px-3 py-2.5 border-b border-border">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-text-primary">{col.status}</h3>
-                    <span className="text-xs text-text-muted bg-surface-overlay px-2 py-0.5 rounded-full">
-                      {colDeals.length}
-                    </span>
+                    <h3 className="text-xs font-semibold text-text-primary">{stage}</h3>
+                    <span className="text-[10px] text-text-muted bg-white px-1.5 py-0.5 rounded-full">{stageDeals.length}</span>
                   </div>
-                  {colValue > 0 && (
-                    <p className="text-xs text-text-muted mt-0.5">${(colValue / 1000).toFixed(0)}K</p>
+                  {stageValue > 0 && (
+                    <p className="text-[10px] text-text-muted mt-0.5">${(stageValue / 1000).toFixed(0)}K</p>
                   )}
                 </div>
-
-                <div className="p-2 space-y-2 min-h-[200px]">
-                  {colDeals.map(deal => (
+                <div className="p-2 space-y-2 min-h-[160px]">
+                  {stageDeals.map(deal => (
                     <DealCard key={deal.id} deal={deal} onClick={onDealClick} />
                   ))}
-                  {colDeals.length === 0 && (
-                    <div className="flex items-center justify-center h-24 text-xs text-text-muted">
-                      No deals
-                    </div>
+                  {stageDeals.length === 0 && (
+                    <div className="flex items-center justify-center h-20 text-xs text-text-muted">Empty</div>
                   )}
                 </div>
               </div>
@@ -59,23 +76,17 @@ export function Pipeline({ onDealClick }: Props) {
         })}
       </div>
 
-      {/* Closed Lost / On Hold */}
-      <div className="mt-6 grid grid-cols-2 gap-4">
-        {(['Closed Lost', 'On Hold'] as DealStatus[]).map(status => {
-          const statusDeals = deals.filter(d => d.status === status)
-          if (statusDeals.length === 0) return null
-          return (
-            <div key={status} className="bg-surface-raised border border-border rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-text-muted mb-3">{status} ({statusDeals.length})</h3>
-              <div className="space-y-2">
-                {statusDeals.map(deal => (
-                  <DealCard key={deal.id} deal={deal} onClick={onDealClick} compact />
-                ))}
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      {/* Lost deals */}
+      {lostDeals.length > 0 && (
+        <div className="mt-6 bg-white border border-border rounded-xl p-4">
+          <h3 className="text-sm font-semibold text-text-muted mb-2">Lost ({lostDeals.length})</h3>
+          <div className="grid grid-cols-3 gap-2">
+            {lostDeals.map(deal => (
+              <DealCard key={deal.id} deal={deal} onClick={onDealClick} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

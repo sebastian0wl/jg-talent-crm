@@ -1,5 +1,6 @@
-import { getDeal, getActionsForDeal, getFulfillmentsForDeal, getActivitiesForDeal, getCompany, getPerson } from '../data/mockData'
-import { StatusBadge, DealTypeBadge, PriorityDot, ActionPriorityBadge, ActionStatusBadge, ActionTypeIcon, FulfillmentStatusBadge, ActivityIcon } from './Badges'
+import { STAGE_GATES, PIPELINE_STAGES } from '../types'
+import { getDeal, getCompany, getPerson, getTasksForDeal, getActivitiesForDeal } from '../data/mockData'
+import { StageBadge, PipelineBadge, PriorityBadge, TaskPriorityBadge, TaskStatusBadge, ActivityIcon } from './Badges'
 
 interface Props {
   dealId: string
@@ -10,184 +11,144 @@ export function DealDetail({ dealId, onClose }: Props) {
   const deal = getDeal(dealId)
   if (!deal) return null
 
-  const actions = getActionsForDeal(dealId)
-  const fulfillments = getFulfillmentsForDeal(dealId)
-  const timeline = getActivitiesForDeal(dealId)
   const company = getCompany(deal.companyId)
   const contact = deal.contactId ? getPerson(deal.contactId) : null
-
-  const value = deal.finalRate ?? deal.pipelineValue ?? deal.quotedRate
+  const tasks = getTasksForDeal(dealId)
+  const timeline = getActivitiesForDeal(dealId)
+  const stages = PIPELINE_STAGES[deal.pipeline]
+  const currentIdx = stages.indexOf(deal.stage)
+  const gate = STAGE_GATES[deal.stage]
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-      <div className="fixed right-0 top-0 bottom-0 w-[520px] bg-surface-raised border-l border-border z-50 overflow-y-auto">
+      <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
+      <div className="fixed right-0 top-0 bottom-0 w-[540px] bg-white border-l border-border z-50 overflow-y-auto shadow-xl">
         {/* Header */}
-        <div className="sticky top-0 bg-surface-raised/95 backdrop-blur-sm border-b border-border p-5 z-10">
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-border p-5 z-10">
           <div className="flex items-start justify-between">
-            <div className="flex-1 min-w-0">
+            <div>
               <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-lg font-semibold text-text-primary truncate">{deal.brand}</h2>
-                <PriorityDot priority={deal.priority} />
+                <h2 className="text-lg font-semibold text-text-primary">{company?.name}</h2>
+                <PriorityBadge priority={deal.priority} />
               </div>
               <p className="text-sm text-text-muted">{deal.name}</p>
             </div>
-            <button onClick={onClose} className="text-text-muted hover:text-text-primary text-xl leading-none p-1">
-              ×
-            </button>
+            <button onClick={onClose} className="text-text-muted hover:text-text-primary text-xl p-1 rounded-lg hover:bg-surface-muted">×</button>
           </div>
           <div className="flex items-center gap-2 mt-3">
-            <StatusBadge status={deal.status} />
-            <DealTypeBadge type={deal.dealType} />
+            <PipelineBadge pipeline={deal.pipeline} />
+            <StageBadge stage={deal.stage} pipeline={deal.pipeline} />
+            <span className="text-xs text-text-muted">{deal.type}</span>
           </div>
         </div>
 
         <div className="p-5 space-y-6">
-          {/* Key Metrics */}
+          {/* Stage Progress */}
+          <div>
+            <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Pipeline Progress</h3>
+            <div className="flex gap-1">
+              {stages.map((s, i) => (
+                <div key={s} className="flex-1" title={s}>
+                  <div className={`h-1.5 rounded-full ${
+                    i < currentIdx ? 'bg-brand-500' :
+                    i === currentIdx ? 'bg-brand-400' :
+                    'bg-gray-200'
+                  }`} />
+                  <p className={`text-[9px] mt-1 truncate ${i === currentIdx ? 'text-brand-700 font-semibold' : 'text-text-muted'}`}>
+                    {s}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Gate Action */}
+          {gate && (
+            <div className="bg-brand-50 border border-brand-200 rounded-lg p-3">
+              <p className="text-[10px] font-semibold text-brand-700 uppercase tracking-wider mb-0.5">To advance this deal</p>
+              <p className="text-sm text-brand-800 font-medium">{gate}</p>
+            </div>
+          )}
+
+          {/* Value */}
           <div className="grid grid-cols-3 gap-3">
-            {deal.quotedRate && (
-              <div className="bg-surface-overlay rounded-lg p-3">
-                <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Quoted</p>
-                <p className="text-sm font-semibold text-text-primary">${deal.quotedRate.toLocaleString()}</p>
+            {deal.value && (
+              <div className="bg-surface-muted rounded-lg p-3">
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">Value</p>
+                <p className="text-lg font-bold text-text-primary">${deal.value.toLocaleString()}</p>
               </div>
             )}
-            {deal.finalRate && (
-              <div className="bg-surface-overlay rounded-lg p-3">
-                <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Final</p>
-                <p className="text-sm font-semibold text-green-400">${deal.finalRate.toLocaleString()}</p>
+            {deal.closedValue && (
+              <div className="bg-green-50 rounded-lg p-3">
+                <p className="text-[10px] text-green-700 uppercase tracking-wider">Closed</p>
+                <p className="text-lg font-bold text-green-700">${deal.closedValue.toLocaleString()}</p>
               </div>
             )}
-            {deal.pipelineValue && (
-              <div className="bg-surface-overlay rounded-lg p-3">
-                <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Pipeline</p>
-                <p className="text-sm font-semibold text-text-primary">${deal.pipelineValue.toLocaleString()}</p>
-              </div>
-            )}
-            {value && !deal.quotedRate && !deal.finalRate && !deal.pipelineValue && (
-              <div className="bg-surface-overlay rounded-lg p-3">
-                <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Value</p>
-                <p className="text-sm font-semibold text-text-primary">${value.toLocaleString()}</p>
+            {deal.expectedCloseDate && (
+              <div className="bg-surface-muted rounded-lg p-3">
+                <p className="text-[10px] text-text-muted uppercase tracking-wider">Expected Close</p>
+                <p className="text-sm font-semibold text-text-primary">{new Date(deal.expectedCloseDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
               </div>
             )}
           </div>
 
           {/* Details */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Details</h3>
+          <div>
+            <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Details</h3>
             <div className="space-y-2 text-sm">
-              {company && (
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Company</span>
-                  <span className="text-text-primary">{company.name}</span>
-                </div>
-              )}
-              {contact && (
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Contact</span>
-                  <span className="text-text-primary">{contact.name} — {contact.role}</span>
-                </div>
-              )}
-              {deal.contactEmail && (
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Email</span>
-                  <span className="text-text-secondary text-xs">{deal.contactEmail}</span>
-                </div>
-              )}
-              {deal.platforms.length > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Platforms</span>
-                  <span className="text-text-primary">{deal.platforms.join(', ')}</span>
-                </div>
-              )}
-              {deal.firstContact && (
-                <div className="flex justify-between">
-                  <span className="text-text-muted">First Contact</span>
-                  <span className="text-text-primary">{new Date(deal.firstContact).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                </div>
-              )}
-              {deal.deadline && (
-                <div className="flex justify-between">
-                  <span className="text-text-muted">Deadline</span>
-                  <span className="text-amber-400 font-medium">{new Date(deal.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-text-muted">Jamey Uses</span>
-                <span className={deal.jameyUsesProduct ? 'text-green-400' : 'text-zinc-500'}>{deal.jameyUsesProduct ? 'Yes' : 'No'}</span>
-              </div>
+              {contact && <Row label="Contact" value={`${contact.name} — ${contact.role}`} />}
+              {contact?.email && <Row label="Email" value={contact.email} />}
+              {deal.platforms && deal.platforms.length > 0 && <Row label="Platforms" value={deal.platforms.join(', ')} />}
+              <Row label="Owner" value={deal.owner === 'both' ? 'Justin & Jamey' : deal.owner === 'justin' ? 'Justin' : 'Jamey'} />
+              <Row label="Jamey Uses" value={deal.jameyUsesProduct ? 'Yes' : 'No'} accent={deal.jameyUsesProduct} />
+              <Row label="Created" value={new Date(deal.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} />
             </div>
           </div>
 
           {/* Deliverables */}
           {deal.deliverables && (
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Deliverables</h3>
-              <p className="text-sm text-text-secondary bg-surface-overlay rounded-lg p-3">{deal.deliverables}</p>
+            <div>
+              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Deliverables</h3>
+              <p className="text-sm text-text-secondary bg-surface-muted rounded-lg p-3">{deal.deliverables}</p>
             </div>
           )}
 
-          {/* Key Terms / Strategy */}
-          {deal.keyTerms && (
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Key Terms & Strategy</h3>
-              <p className="text-sm text-text-secondary bg-surface-overlay rounded-lg p-3">{deal.keyTerms}</p>
+          {/* Terms & Strategy */}
+          {deal.terms && (
+            <div>
+              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Terms & Strategy</h3>
+              <p className="text-sm text-text-secondary bg-surface-muted rounded-lg p-3">{deal.terms}</p>
             </div>
           )}
 
-          {/* Notes */}
           {deal.notes && (
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Notes</h3>
-              <p className="text-sm text-text-secondary bg-surface-overlay rounded-lg p-3">{deal.notes}</p>
+            <div>
+              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Notes</h3>
+              <p className="text-sm text-text-secondary bg-surface-muted rounded-lg p-3">{deal.notes}</p>
             </div>
           )}
 
-          {/* Actions */}
-          {actions.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Actions ({actions.length})</h3>
+          {/* Tasks */}
+          {tasks.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Tasks ({tasks.length})</h3>
               <div className="space-y-2">
-                {actions.map(action => (
-                  <div key={action.id} className="bg-surface-overlay rounded-lg p-3 space-y-2">
-                    <div className="flex items-start gap-2">
-                      <ActionTypeIcon type={action.type} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-text-primary">{action.title}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <ActionPriorityBadge priority={action.priority} />
-                          <ActionStatusBadge status={action.status} />
-                          <span className="text-[10px] text-text-muted">{action.owner}</span>
-                        </div>
-                      </div>
+                {tasks.map(t => (
+                  <div key={t.id} className="bg-surface-muted rounded-lg p-3">
+                    <div className="flex items-start justify-between mb-1">
+                      <p className="text-sm font-medium text-text-primary flex-1">{t.title}</p>
+                      <TaskPriorityBadge priority={t.priority} />
                     </div>
-                    {action.notes && (
-                      <p className="text-xs text-text-muted pl-8">{action.notes}</p>
-                    )}
-                    {action.dueDate && (
-                      <p className="text-xs text-amber-400 pl-8">Due: {new Date(action.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Fulfillment */}
-          {fulfillments.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Fulfillment</h3>
-              <div className="space-y-2">
-                {fulfillments.map(f => (
-                  <div key={f.id} className="bg-surface-overlay rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-text-primary">{f.projectName}</span>
-                      <FulfillmentStatusBadge status={f.status} />
+                    <div className="flex items-center gap-2 text-xs">
+                      <TaskStatusBadge status={t.status} />
+                      <span className="text-text-muted capitalize">{t.assignee}</span>
+                      {t.dueDate && (
+                        <span className={`${new Date(t.dueDate) < new Date() && t.status !== 'Done' ? 'text-red-500 font-medium' : 'text-text-muted'}`}>
+                          Due {new Date(t.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-text-muted">
-                      <span>{f.contentType}</span>
-                      {f.invoiceAmount && <span className="text-text-secondary">${f.invoiceAmount.toLocaleString()}</span>}
-                      {f.invoiceStatus && <span>{f.invoiceStatus}</span>}
-                    </div>
+                    {t.description && <p className="text-xs text-text-muted mt-1.5">{t.description}</p>}
                   </div>
                 ))}
               </div>
@@ -196,17 +157,17 @@ export function DealDetail({ dealId, onClose }: Props) {
 
           {/* Timeline */}
           {timeline.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Activity Timeline</h3>
+            <div>
+              <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Activity</h3>
               <div className="space-y-2">
                 {timeline.map(act => (
                   <div key={act.id} className="flex items-start gap-2.5">
                     <ActivityIcon type={act.type} />
-                    <div className="flex-1 min-w-0">
+                    <div>
                       <p className="text-sm text-text-primary">{act.title}</p>
                       <p className="text-xs text-text-muted">
                         {new Date(act.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                        {act.source && <span className="ml-2 text-text-muted">via {act.source}</span>}
+                        <span className="ml-1.5 capitalize">{act.createdBy}</span>
                       </p>
                     </div>
                   </div>
@@ -217,5 +178,14 @@ export function DealDetail({ dealId, onClose }: Props) {
         </div>
       </div>
     </>
+  )
+}
+
+function Row({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+  return (
+    <div className="flex justify-between py-1 border-b border-border last:border-0">
+      <span className="text-text-muted">{label}</span>
+      <span className={accent ? 'text-brand-600 font-medium' : 'text-text-primary'}>{value}</span>
+    </div>
   )
 }

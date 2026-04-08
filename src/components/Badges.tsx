@@ -1,137 +1,100 @@
-import type { DealStatus, DealType, Priority, ActionPriority, ActionStatus, ActionType, FulfillmentStatus, ActivityType } from '../types'
+import type { DealPriority, TaskPriority, TaskStatus, PipelineId, ActivityType } from '../types'
+import { PIPELINE_LABELS } from '../types'
 
-const statusColors: Record<DealStatus, string> = {
-  'Prospect': 'bg-zinc-700/50 text-zinc-300',
-  'Warm Lead': 'bg-blue-600/20 text-blue-400',
-  'Initial Meeting': 'bg-amber-600/20 text-amber-400',
-  'Scoping': 'bg-orange-600/20 text-orange-400',
-  'Negotiating': 'bg-yellow-600/20 text-yellow-400',
-  'Closed Won': 'bg-green-600/20 text-green-400',
-  'Closed Lost': 'bg-red-600/20 text-red-400',
-  'On Hold': 'bg-zinc-600/20 text-zinc-400',
+// ── Deal Stage Badge (color based on pipeline) ──
+const pipelineStageColors: Record<PipelineId, string> = {
+  content: 'bg-blue-50 text-blue-700 border-blue-200',
+  partnership: 'bg-purple-50 text-purple-700 border-purple-200',
+  service: 'bg-amber-50 text-amber-700 border-amber-200',
 }
 
-export function StatusBadge({ status }: { status: DealStatus }) {
+export function StageBadge({ stage, pipeline }: { stage: string; pipeline: PipelineId }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider ${statusColors[status]}`}>
-      {status}
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium border ${pipelineStageColors[pipeline]}`}>
+      {stage}
     </span>
   )
 }
 
-const typeColors: Record<DealType, string> = {
-  'Sponsored Post': 'text-blue-400',
-  'Video Production': 'text-purple-400',
-  'Education Partnership': 'text-green-400',
-  'Ambassador': 'text-pink-400',
-  'QRT + Comment': 'text-zinc-400',
-  'Creative Direction': 'text-orange-400',
-  'Custom': 'text-zinc-400',
+// ── Pipeline Badge ──
+const pipelineBadgeColors: Record<PipelineId, string> = {
+  content: 'bg-blue-100 text-blue-800',
+  partnership: 'bg-purple-100 text-purple-800',
+  service: 'bg-amber-100 text-amber-800',
 }
 
-export function DealTypeBadge({ type }: { type: DealType }) {
-  return <span className={`text-[10px] font-medium ${typeColors[type]}`}>{type}</span>
-}
-
-export function PriorityDot({ priority }: { priority: Priority }) {
-  const color = priority === 'High' ? 'bg-red-500' : priority === 'Medium' ? 'bg-amber-500' : 'bg-zinc-500'
+export function PipelineBadge({ pipeline }: { pipeline: PipelineId }) {
   return (
-    <span className={`w-2 h-2 rounded-full shrink-0 ${color}`} title={priority} />
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold ${pipelineBadgeColors[pipeline]}`}>
+      {PIPELINE_LABELS[pipeline]}
+    </span>
   )
 }
 
-const actionPriorityColors: Record<ActionPriority, string> = {
-  'Urgent': 'bg-red-600/20 text-red-400',
-  'This Week': 'bg-amber-600/20 text-amber-400',
-  'When Possible': 'bg-zinc-600/20 text-zinc-400',
+// ── Priority ──
+const dealPriorityColors: Record<DealPriority, string> = {
+  High: 'bg-red-50 text-red-700',
+  Medium: 'bg-amber-50 text-amber-700',
+  Low: 'bg-gray-100 text-gray-600',
 }
 
-export function ActionPriorityBadge({ priority }: { priority: ActionPriority }) {
+export function PriorityBadge({ priority }: { priority: DealPriority }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium ${actionPriorityColors[priority]}`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${dealPriorityColors[priority]}`}>
       {priority}
     </span>
   )
 }
 
-const actionStatusColors: Record<ActionStatus, string> = {
-  'To Do': 'bg-zinc-700/50 text-zinc-300',
-  'In Progress': 'bg-blue-600/20 text-blue-400',
-  'Waiting': 'bg-amber-600/20 text-amber-400',
-  'Done': 'bg-green-600/20 text-green-400',
-  'Cancelled': 'bg-zinc-600/20 text-zinc-500',
+const taskPriorityColors: Record<TaskPriority, string> = {
+  Urgent: 'bg-red-100 text-red-700 border border-red-200',
+  High: 'bg-orange-50 text-orange-700',
+  Normal: 'bg-gray-100 text-gray-600',
+  Low: 'bg-gray-50 text-gray-500',
 }
 
-export function ActionStatusBadge({ status }: { status: ActionStatus }) {
+export function TaskPriorityBadge({ priority }: { priority: TaskPriority }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium ${actionStatusColors[status]}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium ${taskPriorityColors[priority]}`}>
+      {priority}
+    </span>
+  )
+}
+
+// ── Task Status ──
+const taskStatusColors: Record<TaskStatus, string> = {
+  'To Do': 'bg-gray-100 text-gray-600',
+  'In Progress': 'bg-blue-50 text-blue-700',
+  'Waiting': 'bg-amber-50 text-amber-700',
+  'Done': 'bg-green-50 text-green-700',
+  'Cancelled': 'bg-gray-50 text-gray-400',
+}
+
+export function TaskStatusBadge({ status }: { status: TaskStatus }) {
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium ${taskStatusColors[status]}`}>
       {status}
     </span>
   )
 }
 
-const actionTypeIcons: Record<ActionType, string> = {
-  'Response Draft': '✎',
-  'Creative': '◑',
-  'Call Prep': '☎',
-  'Contract Review': '☰',
-  'Follow-Up': '↻',
-  'Content Creation': '⬡',
-  'Approval': '✓',
-  'Research': '⊕',
-  'Admin': '⚙',
-}
-
-export function ActionTypeIcon({ type }: { type: ActionType }) {
-  return (
-    <span className="w-6 h-6 rounded-md bg-surface-overlay flex items-center justify-center text-xs text-text-secondary shrink-0">
-      {actionTypeIcons[type]}
-    </span>
-  )
-}
-
-const fulfillmentStatusColors: Record<FulfillmentStatus, string> = {
-  'Brief Received': 'bg-blue-600/20 text-blue-400',
-  'In Production': 'bg-yellow-600/20 text-yellow-400',
-  'In Review': 'bg-orange-600/20 text-orange-400',
-  'Revisions': 'bg-red-600/20 text-red-400',
-  'Approved': 'bg-green-600/20 text-green-400',
-  'Posted': 'bg-emerald-600/20 text-emerald-400',
-  'Invoiced': 'bg-purple-600/20 text-purple-400',
-  'Paid': 'bg-brand-600/20 text-brand-400',
-  'Cancelled': 'bg-zinc-600/20 text-zinc-500',
-}
-
-export function FulfillmentStatusBadge({ status }: { status: FulfillmentStatus }) {
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider ${fulfillmentStatusColors[status]}`}>
-      {status}
-    </span>
-  )
-}
-
-const activityTypeIcons: Record<ActivityType, string> = {
-  'email_in': '↓',
-  'email_out': '↑',
-  'meeting': '◎',
-  'call': '☎',
-  'note': '✎',
-  'agent_action': '⚡',
-}
-
-const activityTypeColors: Record<ActivityType, string> = {
-  'email_in': 'bg-blue-600/20 text-blue-400',
-  'email_out': 'bg-green-600/20 text-green-400',
-  'meeting': 'bg-amber-600/20 text-amber-400',
-  'call': 'bg-purple-600/20 text-purple-400',
-  'note': 'bg-zinc-600/20 text-zinc-400',
-  'agent_action': 'bg-brand-600/20 text-brand-400',
+// ── Activity Icons ──
+const activityConfig: Record<ActivityType, { icon: string; color: string }> = {
+  email_sent: { icon: '↑', color: 'bg-green-100 text-green-600' },
+  email_received: { icon: '↓', color: 'bg-blue-100 text-blue-600' },
+  meeting: { icon: '◎', color: 'bg-amber-100 text-amber-600' },
+  call: { icon: '☎', color: 'bg-purple-100 text-purple-600' },
+  note: { icon: '✎', color: 'bg-gray-100 text-gray-600' },
+  task_created: { icon: '☑', color: 'bg-brand-100 text-brand-700' },
+  stage_change: { icon: '→', color: 'bg-indigo-100 text-indigo-600' },
+  agent_alert: { icon: '⚡', color: 'bg-orange-100 text-orange-600' },
 }
 
 export function ActivityIcon({ type }: { type: ActivityType }) {
+  const cfg = activityConfig[type]
   return (
-    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 ${activityTypeColors[type]}`}>
-      {activityTypeIcons[type]}
+    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs shrink-0 ${cfg.color}`}>
+      {cfg.icon}
     </span>
   )
 }

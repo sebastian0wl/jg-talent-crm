@@ -1,146 +1,150 @@
-import type { Persona, DealStatus } from '../types'
-import { deals, actions, fulfillments } from '../data/mockData'
-import { DealCard } from '../components/DealCard'
+import type { User, PipelineId } from '../types'
+import { PIPELINE_LABELS, PIPELINE_STAGES } from '../types'
+import { deals, tasks, activities, deliverables } from '../data/mockData'
+import { ActivityIcon, TaskPriorityBadge } from '../components/Badges'
+import { getDeal } from '../data/mockData'
 
 interface Props {
   onDealClick: (id: string) => void
-  persona: Persona
+  user: User
 }
 
-export function Dashboard({ onDealClick, persona }: Props) {
-  const activeDeals = deals.filter(d => !['Closed Won', 'Closed Lost'].includes(d.status))
-  const closedWon = deals.filter(d => d.status === 'Closed Won')
-  const totalPipeline = activeDeals.reduce((sum, d) => sum + (d.pipelineValue ?? 0), 0)
-  const totalClosed = closedWon.reduce((sum, d) => sum + (d.finalRate ?? 0), 0)
-  const openActions = actions.filter(a => a.status !== 'Done' && a.status !== 'Cancelled')
-  const myActions = openActions.filter(a =>
-    persona === 'justin' ? (a.owner === 'Justin' || a.owner === 'Both') : (a.owner === 'Jamey' || a.owner === 'Both')
-  )
-  const urgentActions = myActions.filter(a => a.priority === 'Urgent')
-  const overdueActions = openActions.filter(a => a.dueDate && new Date(a.dueDate) < new Date())
-  const awaitingPayment = fulfillments.filter(f => f.invoiceStatus === 'Invoiced' || f.invoiceStatus === 'Overdue')
-  const awaitingTotal = awaitingPayment.reduce((sum, f) => sum + (f.invoiceAmount ?? 0), 0)
+export function Dashboard({ onDealClick, user }: Props) {
+  const active = deals.filter(d => d.stage !== 'Lost' && !d.closedAt)
+  const won = deals.filter(d => d.closedValue)
+  const totalPipeline = active.reduce((s, d) => s + (d.value ?? 0), 0)
+  const totalClosed = won.reduce((s, d) => s + (d.closedValue ?? 0), 0)
+  const openTasks = tasks.filter(t => t.status !== 'Done' && t.status !== 'Cancelled')
+  const myTasks = openTasks.filter(t => t.assignee === user || t.assignee === ('both' as any))
+  const urgentTasks = myTasks.filter(t => t.priority === 'Urgent')
+  const overdueTasks = openTasks.filter(t => t.dueDate && new Date(t.dueDate) < new Date() && t.status !== 'Done')
+  const awaitingPay = deliverables.filter(d => d.invoiceStatus === 'Invoiced' || d.invoiceStatus === 'Overdue')
+  const awaitingTotal = awaitingPay.reduce((s, d) => s + (d.invoiceAmount ?? 0), 0)
 
-  // Funnel data
-  const funnelStages: DealStatus[] = ['Prospect', 'Warm Lead', 'Initial Meeting', 'Scoping', 'Negotiating', 'Closed Won']
-  const funnelData = funnelStages.map(status => ({
-    status,
-    count: deals.filter(d => d.status === status).length,
-    value: deals.filter(d => d.status === status).reduce((sum, d) => sum + (d.pipelineValue ?? d.finalRate ?? 0), 0),
-  }))
-  const maxCount = Math.max(...funnelData.map(d => d.count), 1)
+  const recentActivity = [...activities].sort((a, b) => +new Date(b.timestamp) - +new Date(a.timestamp)).slice(0, 8)
 
-  const funnelColors: Record<string, string> = {
-    'Prospect': 'bg-zinc-600',
-    'Warm Lead': 'bg-blue-500',
-    'Initial Meeting': 'bg-amber-500',
-    'Scoping': 'bg-orange-500',
-    'Negotiating': 'bg-yellow-500',
-    'Closed Won': 'bg-green-500',
-  }
-
-  // Deals needing attention
-  const needsAction = activeDeals.filter(d => {
-    const dealActions = actions.filter(a => a.dealId === d.id && a.status !== 'Done' && a.status !== 'Cancelled')
-    return dealActions.length === 0 && d.status !== 'On Hold'
-  })
+  // Pipeline breakdown
+  const pipelines: PipelineId[] = ['content', 'partnership', 'service']
 
   return (
     <div className="p-6 space-y-6 max-w-6xl">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-text-primary">
-            {persona === 'justin' ? "Justin's Dashboard" : "Jamey's Dashboard"}
-          </h1>
-          <p className="text-sm text-text-muted mt-0.5">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-          </p>
-        </div>
+      <div>
+        <h1 className="text-xl font-semibold text-text-primary">
+          {user === 'justin' ? "Justin's Dashboard" : "Jamey's Dashboard"}
+        </h1>
+        <p className="text-sm text-text-muted">
+          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+        </p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-5 gap-3">
-        <KPI label="Pipeline Value" value={`$${(totalPipeline / 1000).toFixed(0)}K`} sub={`${activeDeals.length} active deals`} />
-        <KPI label="Closed Revenue" value={`$${(totalClosed / 1000).toFixed(0)}K`} sub={`${closedWon.length} deals won`} accent="green" />
-        <KPI label="My Actions" value={String(myActions.length)} sub={`${urgentActions.length} urgent`} accent={urgentActions.length > 0 ? 'red' : undefined} />
-        <KPI label="Overdue" value={String(overdueActions.length)} sub="past due date" accent={overdueActions.length > 0 ? 'red' : undefined} />
-        <KPI label="Awaiting Payment" value={`$${(awaitingTotal / 1000).toFixed(0)}K`} sub={`${awaitingPayment.length} invoices`} accent="purple" />
+      {/* KPIs */}
+      <div className="grid grid-cols-5 gap-4">
+        <KPI label="Active Pipeline" value={`$${(totalPipeline / 1000).toFixed(0)}K`} sub={`${active.length} deals`} />
+        <KPI label="Closed Revenue" value={`$${(totalClosed / 1000).toFixed(0)}K`} sub={`${won.length} won`} color="text-brand-600" />
+        <KPI label="My Tasks" value={String(myTasks.length)} sub={`${urgentTasks.length} urgent`} color={urgentTasks.length > 0 ? 'text-red-600' : undefined} />
+        <KPI label="Overdue" value={String(overdueTasks.length)} sub="past due" color={overdueTasks.length > 0 ? 'text-red-600' : undefined} />
+        <KPI label="Awaiting Payment" value={`$${(awaitingTotal / 1000).toFixed(0)}K`} sub={`${awaitingPay.length} invoices`} color="text-purple-600" />
       </div>
 
       <div className="grid grid-cols-3 gap-6">
-        {/* Pipeline Funnel */}
-        <div className="col-span-2 bg-surface-raised border border-border rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-text-primary mb-4">Pipeline Funnel</h2>
-          <div className="space-y-2.5">
-            {funnelData.map(stage => (
-              <div key={stage.status} className="flex items-center gap-3">
-                <span className="w-28 text-xs text-text-muted text-right shrink-0">{stage.status}</span>
-                <div className="flex-1 h-7 bg-surface-overlay rounded-md overflow-hidden relative">
-                  <div
-                    className={`h-full rounded-md transition-all ${funnelColors[stage.status] ?? 'bg-zinc-600'}`}
-                    style={{ width: `${Math.max((stage.count / maxCount) * 100, 8)}%` }}
-                  />
-                  <span className="absolute inset-0 flex items-center px-3 text-xs font-medium text-white mix-blend-difference">
-                    {stage.count} deal{stage.count !== 1 ? 's' : ''} — ${(stage.value / 1000).toFixed(0)}K
-                  </span>
+        {/* Pipeline Snapshots */}
+        <div className="col-span-2 space-y-4">
+          {pipelines.map(pid => {
+            const pDeals = active.filter(d => d.pipeline === pid)
+            if (pDeals.length === 0) return null
+            const stages = PIPELINE_STAGES[pid]
+            const pValue = pDeals.reduce((s, d) => s + (d.value ?? 0), 0)
+
+            return (
+              <div key={pid} className="bg-white border border-border rounded-xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-text-primary">{PIPELINE_LABELS[pid]}</h3>
+                  <span className="text-xs text-text-muted">{pDeals.length} deals — ${(pValue / 1000).toFixed(0)}K</span>
+                </div>
+                <div className="flex gap-1">
+                  {stages.map(stage => {
+                    const count = pDeals.filter(d => d.stage === stage).length
+                    return (
+                      <div key={stage} className="flex-1 text-center">
+                        <div className={`h-8 rounded flex items-center justify-center text-xs font-medium ${
+                          count > 0 ? 'bg-brand-100 text-brand-800' : 'bg-gray-50 text-gray-300'
+                        }`}>
+                          {count > 0 ? count : ''}
+                        </div>
+                        <p className="text-[8px] text-text-muted mt-1 leading-tight truncate">{stage}</p>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
-            ))}
-          </div>
+            )
+          })}
         </div>
 
-        {/* Urgent / My Actions */}
-        <div className="bg-surface-raised border border-border rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-text-primary mb-3">
-            {urgentActions.length > 0 ? 'Urgent Actions' : 'Next Up'}
-          </h2>
-          <div className="space-y-2">
-            {(urgentActions.length > 0 ? urgentActions : myActions.slice(0, 5)).map(action => (
-              <button
-                key={action.id}
-                onClick={() => action.dealId && onDealClick(action.dealId)}
-                className="w-full text-left p-2.5 rounded-lg bg-surface-overlay hover:bg-surface-card border border-transparent hover:border-border transition-colors"
-              >
-                <p className="text-xs font-medium text-text-primary truncate">{action.title}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className={`text-[10px] font-medium ${
-                    action.priority === 'Urgent' ? 'text-red-400' : action.priority === 'This Week' ? 'text-amber-400' : 'text-zinc-400'
-                  }`}>{action.priority}</span>
-                  <span className="text-[10px] text-text-muted">{action.owner}</span>
-                  {action.dueDate && (
-                    <span className="text-[10px] text-text-muted">
-                      Due {new Date(action.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                    </span>
-                  )}
-                </div>
-              </button>
-            ))}
+        {/* Right Column */}
+        <div className="space-y-4">
+          {/* Urgent Tasks */}
+          <div className="bg-white border border-border rounded-xl p-4">
+            <h3 className="text-sm font-semibold text-text-primary mb-3">
+              {urgentTasks.length > 0 ? 'Urgent' : 'Next Up'}
+            </h3>
+            <div className="space-y-2">
+              {(urgentTasks.length > 0 ? urgentTasks : myTasks.slice(0, 5)).map(t => {
+                const deal = t.dealId ? getDeal(t.dealId) : null
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => t.dealId && onDealClick(t.dealId)}
+                    className="w-full text-left p-2.5 rounded-lg bg-surface-muted hover:bg-brand-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-0.5">
+                      <p className="text-xs font-medium text-text-primary truncate flex-1">{t.title}</p>
+                      <TaskPriorityBadge priority={t.priority} />
+                    </div>
+                    <div className="flex items-center gap-2 text-[10px] text-text-muted">
+                      {deal && <span className="text-brand-600">{deals.find(d => d.id === t.dealId)?.name?.split(' ')[0]}</span>}
+                      <span className="capitalize">{t.assignee}</span>
+                      {t.dueDate && <span>Due {new Date(t.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="bg-white border border-border rounded-xl p-4">
+            <h3 className="text-sm font-semibold text-text-primary mb-3">Recent Activity</h3>
+            <div className="space-y-2">
+              {recentActivity.map(act => (
+                <button
+                  key={act.id}
+                  onClick={() => act.dealId && onDealClick(act.dealId)}
+                  className="w-full text-left flex items-start gap-2 p-1.5 rounded-lg hover:bg-surface-muted transition-colors"
+                >
+                  <ActivityIcon type={act.type} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-text-primary truncate">{act.title}</p>
+                    <p className="text-[10px] text-text-muted">
+                      {new Date(act.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Deals Needing Attention */}
-      {needsAction.length > 0 && (
-        <div className="bg-surface-raised border border-border rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-red-400 mb-3">Deals With No Actions — Need Attention</h2>
-          <div className="grid grid-cols-3 gap-3">
-            {needsAction.map(deal => (
-              <DealCard key={deal.id} deal={deal} onClick={onDealClick} compact />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
 
-function KPI({ label, value, sub, accent }: { label: string; value: string; sub: string; accent?: string }) {
-  const valueColor = accent === 'green' ? 'text-green-400' : accent === 'red' ? 'text-red-400' : accent === 'purple' ? 'text-brand-400' : 'text-text-primary'
+function KPI({ label, value, sub, color }: { label: string; value: string; sub: string; color?: string }) {
   return (
-    <div className="bg-surface-raised border border-border rounded-xl p-4">
-      <p className="text-[10px] text-text-muted uppercase tracking-wider mb-1">{label}</p>
-      <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
-      <p className="text-xs text-text-muted mt-0.5">{sub}</p>
+    <div className="bg-white border border-border rounded-xl p-4">
+      <p className="text-[10px] text-text-muted uppercase tracking-wider font-medium">{label}</p>
+      <p className={`text-2xl font-bold mt-1 ${color ?? 'text-text-primary'}`}>{value}</p>
+      <p className="text-xs text-text-muted">{sub}</p>
     </div>
   )
 }
