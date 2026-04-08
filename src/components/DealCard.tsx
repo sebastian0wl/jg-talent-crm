@@ -1,6 +1,6 @@
 import type { Deal } from '../types'
 import { STAGE_GATES } from '../types'
-import { StageBadge, PriorityBadge, PipelineBadge } from './Badges'
+import { StageBadge, PriorityBadge } from './Badges'
 import { getCompany, getTasksForDeal } from '../data/mockData'
 
 interface Props {
