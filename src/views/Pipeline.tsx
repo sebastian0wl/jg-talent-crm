@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import type { PipelineId } from '../types'
+import { useState, useRef } from 'react'
+import type { PipelineId, Deal } from '../types'
 import { PIPELINE_LABELS, PIPELINE_STAGES, PIPELINE_COLORS } from '../types'
-import { deals } from '../data/mockData'
+import { deals as initialDeals } from '../data/mockData'
 import { DealCard } from '../components/DealCard'
 
 interface Props {
@@ -10,13 +10,55 @@ interface Props {
 
 export function Pipeline({ onDealClick }: Props) {
   const [activePipeline, setActivePipeline] = useState<PipelineId>('content')
-  const pipelines: PipelineId[] = ['content', 'partnership', 'service']
+  const [dealState, setDealState] = useState<Deal[]>(initialDeals)
+  const [dragId, setDragId] = useState<string | null>(null)
+  const [dropTarget, setDropTarget] = useState<string | null>(null)
+  const dragCounter = useRef<Record<string, number>>({})
 
-  const pipelineDeals = deals.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
+  const pipelines: PipelineId[] = ['content', 'partnership', 'service']
+  const pipelineDeals = dealState.filter(d => d.pipeline === activePipeline && d.stage !== 'Lost')
   const stages = PIPELINE_STAGES[activePipeline]
   const totalValue = pipelineDeals.reduce((s, d) => s + (d.value ?? 0), 0)
+  const lostDeals = dealState.filter(d => d.pipeline === activePipeline && d.stage === 'Lost')
 
-  const lostDeals = deals.filter(d => d.pipeline === activePipeline && d.stage === 'Lost')
+  const handleDragStart = (dealId: string) => {
+    setDragId(dealId)
+  }
+
+  const handleDragEnd = () => {
+    setDragId(null)
+    setDropTarget(null)
+    dragCounter.current = {}
+  }
+
+  const handleDragEnter = (stage: string) => {
+    dragCounter.current[stage] = (dragCounter.current[stage] || 0) + 1
+    setDropTarget(stage)
+  }
+
+  const handleDragLeave = (stage: string) => {
+    dragCounter.current[stage] = (dragCounter.current[stage] || 0) - 1
+    if (dragCounter.current[stage] <= 0) {
+      dragCounter.current[stage] = 0
+      if (dropTarget === stage) setDropTarget(null)
+    }
+  }
+
+  const handleDrop = (targetStage: string) => {
+    if (!dragId) return
+    setDealState(prev =>
+      prev.map(d =>
+        d.id === dragId
+          ? { ...d, stage: targetStage, lastActivityAt: new Date().toISOString() }
+          : d
+      )
+    )
+    setDragId(null)
+    setDropTarget(null)
+    dragCounter.current = {}
+  }
+
+  const draggedDeal = dragId ? dealState.find(d => d.id === dragId) : null
 
   return (
     <div className="p-6">
@@ -49,10 +91,21 @@ export function Pipeline({ onDealClick }: Props) {
         {stages.map(stage => {
           const stageDeals = pipelineDeals.filter(d => d.stage === stage)
           const stageValue = stageDeals.reduce((s, d) => s + (d.value ?? 0), 0)
+          const isOver = dropTarget === stage && dragId !== null
+          const isDragSource = draggedDeal?.stage === stage
 
           return (
-            <div key={stage} className="w-[220px] sm:w-[260px] shrink-0">
-              <div className="bg-surface-muted rounded-xl">
+            <div
+              key={stage}
+              className="w-[220px] sm:w-[260px] shrink-0"
+              onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move' }}
+              onDragEnter={() => handleDragEnter(stage)}
+              onDragLeave={() => handleDragLeave(stage)}
+              onDrop={(e) => { e.preventDefault(); handleDrop(stage) }}
+            >
+              <div className={`bg-surface-muted rounded-xl transition-all duration-200 ${
+                isOver && !isDragSource ? 'ring-2 ring-brand-400 ring-offset-1 bg-brand-50/30' : ''
+              }`}>
                 <div className="px-3 py-2.5 border-b border-border">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-semibold text-text-primary">{stage}</h3>
@@ -64,10 +117,25 @@ export function Pipeline({ onDealClick }: Props) {
                 </div>
                 <div className="p-2 space-y-2 min-h-[160px]">
                   {stageDeals.map(deal => (
-                    <DealCard key={deal.id} deal={deal} onClick={onDealClick} />
+                    <div
+                      key={deal.id}
+                      draggable
+                      onDragStart={() => handleDragStart(deal.id)}
+                      onDragEnd={handleDragEnd}
+                      className={`cursor-grab active:cursor-grabbing transition-opacity duration-150 ${
+                        dragId === deal.id ? 'opacity-40' : ''
+                      }`}
+                    >
+                      <DealCard deal={deal} onClick={onDealClick} />
+                    </div>
                   ))}
-                  {stageDeals.length === 0 && (
+                  {stageDeals.length === 0 && !isOver && (
                     <div className="flex items-center justify-center h-20 text-xs text-text-muted">Empty</div>
+                  )}
+                  {stageDeals.length === 0 && isOver && !isDragSource && (
+                    <div className="flex items-center justify-center h-20 text-xs text-brand-500 font-medium">
+                      Drop here
+                    </div>
                   )}
                 </div>
               </div>
