@@ -19,7 +19,7 @@ function getPriorityIndex(p: TaskPriority) { return priorityOrder.indexOf(p) }
 function getStatusIndex(s: TaskStatus) { return statusOrder.indexOf(s) }
 
 export function Actions({ user, onDealClick }: Props) {
-  const [activeTab, setActiveTab] = useState<'justin' | 'jamey' | 'agent'>('justin')
+  const [activeTab, setActiveTab] = useState<'justin' | 'jamey' | 'agent'>(user)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [priorityFilter, setPriorityFilter] = useState('')
