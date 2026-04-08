@@ -12,8 +12,8 @@ export function People({ onDealClick }: Props) {
         <p className="text-sm text-text-muted">{people.length} contacts</p>
       </div>
 
-      <div className="bg-white border border-border rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white border border-border rounded-xl overflow-x-auto">
+        <table className="w-full text-sm min-w-[560px]">
           <thead>
             <tr className="border-b border-border bg-surface-muted">
               <th className="text-left text-xs text-text-muted font-medium p-3">Name</th>

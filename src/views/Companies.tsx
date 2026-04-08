@@ -12,8 +12,8 @@ export function Companies({ onDealClick }: Props) {
         <p className="text-sm text-text-muted">{companies.length} companies in your CRM</p>
       </div>
 
-      <div className="bg-white border border-border rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white border border-border rounded-xl overflow-x-auto">
+        <table className="w-full text-sm min-w-[600px]">
           <thead>
             <tr className="border-b border-border bg-surface-muted">
               <th className="text-left text-xs text-text-muted font-medium p-3">Company</th>

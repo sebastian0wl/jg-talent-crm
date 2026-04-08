@@ -22,7 +22,7 @@ export default function App() {
     <div className="flex h-screen overflow-hidden bg-bg">
       <Sidebar view={view} setView={setView} user={user} setUser={setUser} />
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
         {view === 'dashboard' && <Dashboard onDealClick={openDeal} user={user} />}
         {view === 'deals' && <Pipeline onDealClick={openDeal} />}
         {view === 'tasks' && <Actions user={user} onDealClick={openDeal} />}

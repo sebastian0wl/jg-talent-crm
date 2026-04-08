@@ -22,7 +22,7 @@ export function DealDetail({ dealId, onClose }: Props) {
   return (
     <>
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-      <div className="fixed right-0 top-0 bottom-0 w-[540px] bg-white border-l border-border z-50 overflow-y-auto shadow-xl">
+      <div className="fixed inset-0 md:inset-auto md:right-0 md:top-0 md:bottom-0 md:w-[540px] bg-white md:border-l border-border z-50 overflow-y-auto shadow-xl">
         {/* Header */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-border p-5 z-10">
           <div className="flex items-start justify-between">
@@ -46,9 +46,9 @@ export function DealDetail({ dealId, onClose }: Props) {
           {/* Stage Progress */}
           <div>
             <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Pipeline Progress</h3>
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-wrap md:flex-nowrap">
               {stages.map((s, i) => (
-                <div key={s} className="flex-1" title={s}>
+                <div key={s} className="flex-1 min-w-[40px]" title={s}>
                   <div className={`h-1.5 rounded-full ${
                     i < currentIdx ? 'bg-brand-500' :
                     i === currentIdx ? 'bg-brand-400' :
@@ -71,7 +71,7 @@ export function DealDetail({ dealId, onClose }: Props) {
           )}
 
           {/* Value */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {deal.value && (
               <div className="bg-surface-muted rounded-lg p-3">
                 <p className="text-[10px] text-text-muted uppercase tracking-wider">Value</p>

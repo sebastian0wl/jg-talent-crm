@@ -21,12 +21,12 @@ export function Pipeline({ onDealClick }: Props) {
   return (
     <div className="p-6">
       {/* Pipeline Tabs */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
           <h1 className="text-xl font-semibold text-text-primary">Deal Pipeline</h1>
           <p className="text-sm text-text-muted">{pipelineDeals.length} deals — ${(totalValue / 1000).toFixed(0)}K total value</p>
         </div>
-        <div className="flex gap-1 bg-surface-muted p-1 rounded-lg">
+        <div className="flex gap-1 bg-surface-muted p-1 rounded-lg overflow-x-auto">
           {pipelines.map(pid => (
             <button
               key={pid}
@@ -44,14 +44,14 @@ export function Pipeline({ onDealClick }: Props) {
         </div>
       </div>
 
-      {/* Kanban */}
-      <div className="flex gap-3 overflow-x-auto pb-4">
+      {/* Kanban — horizontal scroll on all sizes, cards stack naturally */}
+      <div className="flex gap-3 overflow-x-auto pb-4 -mx-6 px-6 md:mx-0 md:px-0">
         {stages.map(stage => {
           const stageDeals = pipelineDeals.filter(d => d.stage === stage)
           const stageValue = stageDeals.reduce((s, d) => s + (d.value ?? 0), 0)
 
           return (
-            <div key={stage} className="w-[260px] shrink-0">
+            <div key={stage} className="w-[220px] sm:w-[260px] shrink-0">
               <div className="bg-surface-muted rounded-xl">
                 <div className="px-3 py-2.5 border-b border-border">
                   <div className="flex items-center justify-between">
@@ -80,7 +80,7 @@ export function Pipeline({ onDealClick }: Props) {
       {lostDeals.length > 0 && (
         <div className="mt-6 bg-white border border-border rounded-xl p-4">
           <h3 className="text-sm font-semibold text-text-muted mb-2">Lost ({lostDeals.length})</h3>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {lostDeals.map(deal => (
               <DealCard key={deal.id} deal={deal} onClick={onDealClick} />
             ))}

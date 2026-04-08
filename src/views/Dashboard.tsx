@@ -38,7 +38,7 @@ export function Dashboard({ onDealClick, user }: Props) {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
         <KPI label="Active Pipeline" value={`$${(totalPipeline / 1000).toFixed(0)}K`} sub={`${active.length} deals`} />
         <KPI label="Closed Revenue" value={`$${(totalClosed / 1000).toFixed(0)}K`} sub={`${won.length} won`} color="text-brand-600" />
         <KPI label="My Tasks" value={String(myTasks.length)} sub={`${urgentTasks.length} urgent`} color={urgentTasks.length > 0 ? 'text-red-600' : undefined} />
@@ -46,9 +46,9 @@ export function Dashboard({ onDealClick, user }: Props) {
         <KPI label="Awaiting Payment" value={`$${(awaitingTotal / 1000).toFixed(0)}K`} sub={`${awaitingPay.length} invoices`} color="text-purple-600" />
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pipeline Snapshots */}
-        <div className="col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4">
           {pipelines.map(pid => {
             const pDeals = active.filter(d => d.pipeline === pid)
             if (pDeals.length === 0) return null
@@ -61,7 +61,7 @@ export function Dashboard({ onDealClick, user }: Props) {
                   <h3 className="text-sm font-semibold text-text-primary">{PIPELINE_LABELS[pid]}</h3>
                   <span className="text-xs text-text-muted">{pDeals.length} deals — ${(pValue / 1000).toFixed(0)}K</span>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 overflow-x-auto">
                   {stages.map(stage => {
                     const count = pDeals.filter(d => d.stage === stage).length
                     return (

@@ -23,7 +23,7 @@ export const people: Person[] = [
   { id: 'pe-6', name: 'Jordan Lee', email: 'jordan@flux.ai', role: 'Partnerships', companyId: 'co-6' },
   { id: 'pe-7', name: 'Luna Park', email: 'luna@reve.art', role: 'Community Lead', companyId: 'co-7' },
   { id: 'pe-8', name: 'Tyler Brooks', email: 'tyler@block.xyz', role: 'Brand Manager', companyId: 'co-8' },
-  { id: 'pe-9', name: 'Mika Tanaka', email: 'mika@higgsfield.ai', role: 'CEO', companyId: 'co-9' },
+  { id: 'pe-9', name: 'Mika Tanaka', email: 'mika@higgsfield.ai', role: 'CEO', companyId: 'co-9', notes: 'Via Shown Media' },
   { id: 'pe-10', name: 'Carlos Ruiz', email: 'carlos@freepik.com', role: 'Influencer Ops', companyId: 'co-10' },
   { id: 'pe-11', name: 'Emma Wright', email: 'emma@lovable.dev', role: 'Marketing Lead', companyId: 'co-11' },
 ]
@@ -66,9 +66,10 @@ export const deals: Deal[] = [
   },
   {
     id: 'd-9', name: 'Higgsfield Sponsored Video', companyId: 'co-9', contactId: 'pe-9',
-    pipeline: 'content', stage: 'Paid', type: 'Sponsored Video', priority: 'High',
-    value: 8000, closedValue: 8000, platforms: ['X', 'YouTube'],
-    deliverables: 'Sponsored video + thread',
+    pipeline: 'content', stage: 'Invoiced', type: 'Sponsored Video', priority: 'Medium',
+    value: 1200, closedValue: 1200, platforms: ['X'],
+    deliverables: 'Sponsored video',
+    notes: 'Came through Shown Media. Content delivered. In invoicing/collections.',
     jameyUsesProduct: true, owner: 'both',
     createdAt: '2026-02-01', lastActivityAt: '2026-03-15', closedAt: '2026-03-15',
   },
@@ -167,7 +168,7 @@ export const activities: Activity[] = [
 
 export const deliverables: Deliverable[] = [
   { id: 'del-1', title: 'Block Brand Identity', dealId: 'd-8', status: 'Published', contentType: 'Brand Identity', invoiceAmount: 5000, invoiceStatus: 'Invoiced', dueDate: '2026-03-15', publishDate: '2026-03-18' },
-  { id: 'del-2', title: 'Higgsfield Video + Thread', dealId: 'd-9', status: 'Published', contentType: 'Video + Thread', invoiceAmount: 8000, invoiceStatus: 'Paid', dueDate: '2026-03-08', publishDate: '2026-03-10' },
+  { id: 'del-2', title: 'Higgsfield Sponsored Video', dealId: 'd-9', status: 'Published', contentType: 'Sponsored Video', invoiceAmount: 1200, invoiceStatus: 'Invoiced', dueDate: '2026-03-08', publishDate: '2026-03-10' },
 ]
 
 // Lookups
