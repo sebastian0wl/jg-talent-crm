@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
 import { STAGE_GATES, PIPELINE_STAGES, type TaskStatus, type TaskPriority, type AttachmentType } from '../types'
 import { useData } from '../lib/DataContext'
-import { getDealScore, getEmailThreadForDeal, getEmailThread } from '../data/scores'
+import { getEmailThreadForDeal, getEmailThread } from '../data/scores'
+import { useScoring } from '../lib/useScoring'
 import { StageBadge, PipelineBadge, PriorityBadge, ActivityIcon } from './Badges'
 import { DealScoreCard } from './DealScoreCard'
 import { EmailThreadView } from './EmailThreadView'
@@ -13,6 +14,8 @@ interface Props {
 
 export function DealDetail({ dealId, onClose }: Props) {
   const { getDeal, getCompany, getPerson, getTasksForDeal, getActivitiesForDeal, updateDeal, updateTask, createTask, people, companies } = useData()
+  const { score, isStale, isScoring, rescore } = useScoring(dealId)
+  const [tab, setTab] = useState<'overview' | 'score'>('overview')
 
   const deal = getDeal(dealId)
   if (!deal) return null
@@ -24,9 +27,7 @@ export function DealDetail({ dealId, onClose }: Props) {
   const stages = PIPELINE_STAGES[deal.pipeline]
   const currentIdx = stages.indexOf(deal.stage)
   const gate = STAGE_GATES[deal.stage]
-  const score = getDealScore(dealId)
   const emailThreads = getEmailThreadForDeal(dealId)
-  const [tab, setTab] = useState<'overview' | 'score'>('overview')
 
   return (
     <>
@@ -81,7 +82,7 @@ export function DealDetail({ dealId, onClose }: Props) {
         <div className="p-5 space-y-6">
           {/* Score Tab */}
           {tab === 'score' && score && (
-            <DealScoreCard score={score} />
+            <DealScoreCard score={score} isStale={isStale} isScoring={isScoring} onRescore={rescore} />
           )}
 
           {tab === 'overview' && <>

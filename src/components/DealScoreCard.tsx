@@ -99,12 +99,48 @@ function ViabilityPathCard({ path }: { path: ViabilityPath }) {
   )
 }
 
-export function DealScoreCard({ score }: { score: DealScore }) {
+interface DealScoreCardProps {
+  score: DealScore
+  isStale?: boolean
+  isScoring?: boolean
+  onRescore?: () => void
+}
+
+export function DealScoreCard({ score, isStale, isScoring, onRescore }: DealScoreCardProps) {
   const [expandedDim, setExpandedDim] = useState<string | null>(null)
   const [section, setSection] = useState<'dimensions' | 'upgrades' | 'paths'>('dimensions')
 
   return (
     <div>
+      {/* Stale Banner */}
+      {isStale && !isScoring && (
+        <div className="flex items-center gap-2 mb-3 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+          <svg className="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <p className="text-xs text-amber-800 flex-1">Deal data has changed since last evaluation.</p>
+          {onRescore && (
+            <button
+              onClick={onRescore}
+              className="text-xs font-semibold text-amber-700 hover:text-amber-900 bg-amber-100 hover:bg-amber-200 px-2.5 py-1 rounded-md transition-colors"
+            >
+              Re-score
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Scoring Indicator */}
+      {isScoring && (
+        <div className="flex items-center gap-2 mb-3 bg-brand-50 border border-brand-200 rounded-lg px-3 py-2">
+          <svg className="w-4 h-4 text-brand-500 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          <p className="text-xs text-brand-700">Scoring deal...</p>
+        </div>
+      )}
+
       {/* Overall Grade + Recommendation */}
       <div className="flex items-start gap-3 mb-4">
         <GradeBadge grade={score.overallGrade} size="lg" />
@@ -180,7 +216,7 @@ export function DealScoreCard({ score }: { score: DealScore }) {
       )}
 
       <p className="text-[9px] text-text-muted mt-3">
-        Evaluated {new Date(score.evaluatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        Last scored {new Date(score.evaluatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
       </p>
     </div>
   )
