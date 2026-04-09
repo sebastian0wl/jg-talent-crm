@@ -70,6 +70,15 @@ export function useDeals() {
   }, [])
 
   const updateDeal = useCallback(async (id: string, updates: Partial<Deal>) => {
+    // Auto-set contractedAt when deal enters Terms Agreed or Contract Signed
+    const contractStages = ['Terms Agreed', 'Contract Signed', 'Signed']
+    if (updates.stage && contractStages.includes(updates.stage)) {
+      const deal = deals.find(d => d.id === id)
+      if (deal && !deal.contractedAt) {
+        updates = { ...updates, contractedAt: new Date().toISOString() }
+      }
+    }
+
     // Optimistic update
     setDeals(prev => prev.map(d => d.id === id ? { ...d, ...updates, lastActivityAt: new Date().toISOString() } : d))
 
@@ -78,7 +87,7 @@ export function useDeals() {
       snakeUpdates.last_activity_at = new Date().toISOString()
       await (sb().from('deals') as any).update(snakeUpdates).eq('id', id)
     }
-  }, [])
+  }, [deals])
 
   const createDeal = useCallback(async (deal: Omit<Deal, 'id' | 'createdAt' | 'lastActivityAt'>) => {
     const newDeal: Deal = {

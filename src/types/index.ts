@@ -7,24 +7,26 @@
 export type PipelineId = 'content' | 'partnership' | 'service'
 
 export type ContentStage =
-  | 'Inbound'         // They reached out or we identified opportunity
-  | 'Rate Sent'       // We sent pricing/rate card → gate: send rate
-  | 'Terms Agreed'    // Both sides agreed on price + scope → gate: confirm terms
-  | 'Brief Received'  // Brand sent creative brief → gate: receive brief
-  | 'Content Created' // Jamey produced the content → gate: Jamey delivers draft
-  | 'In Review'       // Brand is reviewing → gate: submit for review
-  | 'Published'       // Content is live → gate: publish/post
-  | 'Invoiced'        // Invoice sent → gate: send invoice
-  | 'Paid'            // Money received → gate: confirm payment
-  | 'Lost'            // Dead deal
+  | 'Inbound'           // They reached out or we identified opportunity
+  | 'Qualifying'        // Evaluating fit — is this worth pursuing? → gate: evaluate deal
+  | 'Brief Received'    // Brand sent creative brief / scope defined → gate: receive brief
+  | 'Rate Sent'         // We sent pricing based on brief → gate: send rate
+  | 'Negotiating'       // Back and forth on terms → gate: respond to counter
+  | 'Terms Agreed'      // Both sides agreed on price + scope → gate: confirm terms (auto-sets contractedAt)
+  | 'Contract Signed'   // Legal contract executed → gate: sign contract
+  | 'Creating'          // Jamey producing content → gate: Jamey delivers draft
+  | 'Delivered'         // Content delivered/published → gate: deliver/publish
+  | 'Paid'              // Money received → gate: confirm payment
+  | 'Lost'              // Dead deal
 
 export type PartnershipStage =
   | 'Inbound'          // Initial contact
   | 'Discovery Call'   // Intro call scheduled or completed → gate: schedule/complete call
+  | 'Brief Received'   // Scope/deliverables defined → gate: receive brief/scope
   | 'Proposal Sent'    // We sent a proposal → gate: send proposal
   | 'Negotiating'      // Back and forth on terms → gate: respond to counter
-  | 'Contract Review'  // Legal/contract review → gate: review contract
-  | 'Signed'           // Deal signed → gate: sign contract
+  | 'Terms Agreed'     // Both sides agreed → gate: confirm terms (auto-sets contractedAt)
+  | 'Contract Signed'  // Legal contract executed → gate: sign contract
   | 'Active'           // Ongoing partnership → gate: start deliverables
   | 'Renewal'          // Up for renewal → gate: send renewal proposal
   | 'Lost'             // Dead deal
@@ -33,10 +35,11 @@ export type ServiceStage =
   | 'Inquiry'          // Client reached out
   | 'Scoping Call'     // Discovery/scoping call → gate: schedule/complete call
   | 'SOW Sent'         // Scope of work sent → gate: send SOW
-  | 'Signed'           // Contract signed → gate: sign contract
+  | 'Negotiating'      // Back and forth → gate: respond to counter
+  | 'Terms Agreed'     // Both sides agreed → gate: confirm terms (auto-sets contractedAt)
+  | 'Contract Signed'  // Contract signed → gate: sign contract
   | 'In Progress'      // Work underway → gate: start work
   | 'Delivered'        // Deliverables handed off → gate: deliver work
-  | 'Invoiced'         // Invoice sent → gate: send invoice
   | 'Paid'             // Paid → gate: confirm payment
   | 'Lost'             // Dead deal
 
@@ -73,36 +76,38 @@ export const DEAL_TYPE_PIPELINE: Record<DealType, PipelineId> = {
 
 // Ordered stages per pipeline (for kanban rendering + progression)
 export const PIPELINE_STAGES: Record<PipelineId, string[]> = {
-  content: ['Inbound', 'Rate Sent', 'Terms Agreed', 'Brief Received', 'Content Created', 'In Review', 'Published', 'Invoiced', 'Paid'],
-  partnership: ['Inbound', 'Discovery Call', 'Proposal Sent', 'Negotiating', 'Contract Review', 'Signed', 'Active', 'Renewal'],
-  service: ['Inquiry', 'Scoping Call', 'SOW Sent', 'Signed', 'In Progress', 'Delivered', 'Invoiced', 'Paid'],
+  content: ['Inbound', 'Qualifying', 'Brief Received', 'Rate Sent', 'Negotiating', 'Terms Agreed', 'Contract Signed', 'Creating', 'Delivered', 'Paid'],
+  partnership: ['Inbound', 'Discovery Call', 'Brief Received', 'Proposal Sent', 'Negotiating', 'Terms Agreed', 'Contract Signed', 'Active', 'Renewal'],
+  service: ['Inquiry', 'Scoping Call', 'SOW Sent', 'Negotiating', 'Terms Agreed', 'Contract Signed', 'In Progress', 'Delivered', 'Paid'],
 }
+
+// Stages that auto-set contractedAt to today when entered
+export const CONTRACT_STAGES: string[] = ['Terms Agreed', 'Contract Signed', 'Signed']
 
 // Gate actions — what must happen to advance past each stage
 export const STAGE_GATES: Record<string, string> = {
   // Content
-  'Inbound': 'Send rate card or pricing',
-  'Rate Sent': 'Agree on price and scope',
-  'Terms Agreed': 'Receive creative brief from brand',
-  'Brief Received': 'Jamey creates the content',
-  'Content Created': 'Submit content for brand review',
-  'In Review': 'Publish or post the content',
-  'Published': 'Send invoice',
-  'Invoiced': 'Confirm payment received',
+  'Inbound': 'Evaluate deal fit — run deal scorer',
+  'Qualifying': 'Request creative brief from brand',
+  'Brief Received': 'Send rate based on brief scope',
+  'Rate Sent': 'Wait for response or counter',
+  'Negotiating': 'Agree on final terms',
+  'Terms Agreed': 'Get contract signed',
+  'Contract Signed': 'Jamey creates the content',
+  'Creating': 'Deliver content to brand',
+  'Delivered': 'Send invoice and confirm payment',
   // Partnership
-  'Discovery Call': 'Send proposal',
+  'Discovery Call': 'Request brief or scope document',
   'Proposal Sent': 'Respond to counter or confirm',
-  'Negotiating': 'Send contract for review',
-  'Contract Review': 'Sign contract',
-  'Signed': 'Begin deliverables',
   'Active': 'Send renewal proposal',
   'Renewal': 'Re-sign or close',
   // Service
   'Inquiry': 'Schedule scoping call',
   'Scoping Call': 'Send scope of work',
-  'SOW Sent': 'Sign contract',
+  'SOW Sent': 'Negotiate terms',
   'In Progress': 'Deliver final work',
-  'Delivered': 'Send invoice',
+  // Shared
+  'Paid': 'Deal complete',
 }
 
 export const PIPELINE_LABELS: Record<PipelineId, string> = {
