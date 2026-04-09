@@ -1,11 +1,12 @@
 import { useState, useCallback } from 'react'
-import { STAGE_GATES, PIPELINE_STAGES, type TaskStatus, type TaskPriority, type AttachmentType } from '../types'
+import { STAGE_GATES, PIPELINE_STAGES, ATTACHMENT_TYPE_META, type TaskStatus, type TaskPriority, type AttachmentType, type Attachment } from '../types'
 import { useData } from '../lib/DataContext'
 import { getEmailThreadForDeal, getEmailThread } from '../data/scores'
 import { useScoring } from '../lib/useScoring'
 import { StageBadge, PipelineBadge, PriorityBadge, ActivityIcon } from './Badges'
 import { DealScoreCard } from './DealScoreCard'
 import { EmailThreadView } from './EmailThreadView'
+import { AskAI } from './AskAI'
 
 interface Props {
   dealId: string
@@ -16,6 +17,7 @@ export function DealDetail({ dealId, onClose }: Props) {
   const { getDeal, getCompany, getPerson, getTasksForDeal, getActivitiesForDeal, updateDeal, updateTask, createTask, people, companies } = useData()
   const { score, isStale, isScoring, rescore } = useScoring(dealId)
   const [tab, setTab] = useState<'overview' | 'score'>('overview')
+  const [showAskAI, setShowAskAI] = useState(false)
 
   const deal = getDeal(dealId)
   if (!deal) return null
@@ -32,7 +34,9 @@ export function DealDetail({ dealId, onClose }: Props) {
   return (
     <>
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-      <div className="fixed inset-0 md:inset-auto md:right-0 md:top-0 md:bottom-0 md:w-[540px] bg-white md:border-l border-border z-50 overflow-y-auto shadow-xl">
+      <div className={`fixed inset-0 md:inset-auto md:right-0 md:top-0 md:bottom-0 bg-white md:border-l border-border z-50 flex shadow-xl transition-[width] duration-300 ease-in-out ${showAskAI ? 'md:w-[960px]' : 'md:w-[540px]'}`}>
+        {/* Deal Content */}
+        <div className={`flex-1 min-w-0 overflow-y-auto ${showAskAI ? 'md:w-[540px] md:shrink-0' : 'w-full'}`}>
         {/* Header */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-border p-5 z-10">
           <div className="flex items-start justify-between">
@@ -55,26 +59,36 @@ export function DealDetail({ dealId, onClose }: Props) {
             <span className="text-xs text-text-muted">{deal.type}</span>
           </div>
 
-          {/* Tab bar */}
-          <div className="flex gap-1 mt-3 bg-surface-muted rounded-lg p-0.5">
+          {/* Tab bar + Ask AI */}
+          <div className="flex items-center gap-2 mt-3">
+            <div className="flex gap-1 flex-1 bg-surface-muted rounded-lg p-0.5">
+              <button
+                onClick={() => setTab('overview')}
+                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${
+                  tab === 'overview' ? 'bg-white text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'
+                }`}
+              >
+                Overview
+              </button>
+              <button
+                onClick={() => setTab('score')}
+                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${
+                  tab === 'score'
+                    ? 'bg-white text-text-primary shadow-sm'
+                    : score ? 'text-text-muted hover:text-text-secondary' : 'text-text-muted/50 cursor-not-allowed'
+                }`}
+                disabled={!score}
+              >
+                Score{score ? ` (${score.overallGrade})` : ''}
+              </button>
+            </div>
             <button
-              onClick={() => setTab('overview')}
-              className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${
-                tab === 'overview' ? 'bg-white text-text-primary shadow-sm' : 'text-text-muted hover:text-text-secondary'
-              }`}
+              onClick={() => setShowAskAI(true)}
+              className="shrink-0 flex items-center gap-1.5 text-xs font-medium bg-brand-50 hover:bg-brand-100 text-brand-600 px-3 py-1.5 rounded-lg transition-colors border border-brand-200"
+              title="Ask AI about this deal"
             >
-              Overview
-            </button>
-            <button
-              onClick={() => setTab('score')}
-              className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${
-                tab === 'score'
-                  ? 'bg-white text-text-primary shadow-sm'
-                  : score ? 'text-text-muted hover:text-text-secondary' : 'text-text-muted/50 cursor-not-allowed'
-              }`}
-              disabled={!score}
-            >
-              Score{score ? ` (${score.overallGrade})` : ''}
+              <span className="text-sm">&#10024;</span>
+              Ask AI
             </button>
           </div>
         </div>
@@ -150,14 +164,8 @@ export function DealDetail({ dealId, onClose }: Props) {
             </div>
           </div>
 
-          {/* Documents — Brief & Contract */}
-          <div>
-            <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Documents</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <FileSlot label="Project Brief" type="brief" dealId={dealId} />
-              <FileSlot label="Contract" type="contract" dealId={dealId} />
-            </div>
-          </div>
+          {/* Documents */}
+          <DocumentsSection dealId={dealId} />
 
           {/* Details */}
           <div>
@@ -304,7 +312,13 @@ export function DealDetail({ dealId, onClose }: Props) {
           )}
           </>}
         </div>
-      </div>
+      </div>{/* end deal content */}
+
+      {/* Ask AI Panel — inline beside deal detail */}
+      {showAskAI && (
+        <AskAI dealId={dealId} onClose={() => setShowAskAI(false)} inline />
+      )}
+      </div>{/* end outer flex container */}
     </>
   )
 }
@@ -681,45 +695,55 @@ function EditableTaskCard({ task: t, onUpdate }: { task: any; onUpdate: (id: str
   )
 }
 
-function FileSlot({ label, type, dealId }: { label: string; type: string; dealId: string }) {
-  const { uploadFile, deleteAttachment, getAttachmentsForDeal, getDeal } = useData()
-  const [dragOver, setDragOver] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [error, setError] = useState<string | null>(null)
-  const fileInputId = `file-${type}-${dealId}`
-
+function DocumentsSection({ dealId }: { dealId: string }) {
+  const { uploadFile, attachUrl, deleteAttachment, getAttachmentsForDeal, getDeal } = useData()
+  const docs = getAttachmentsForDeal(dealId)
   const deal = getDeal(dealId)
   const companyId = deal?.companyId
 
-  // Find existing attachment for this deal + file type
-  const existingAttachment = getAttachmentsForDeal(dealId).find(a => a.fileType === type)
+  const [showForm, setShowForm] = useState(false)
+  const [mode, setMode] = useState<'file' | 'url'>('file')
+  const [fileType, setFileType] = useState<AttachmentType>('brief')
+  const [description, setDescription] = useState('')
+  const [urlValue, setUrlValue] = useState('')
+  const [urlName, setUrlName] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [error, setError] = useState<string | null>(null)
+  const [dragOver, setDragOver] = useState(false)
+  const fileInputId = `doc-upload-${dealId}`
 
-  const handleUpload = useCallback(async (file: File) => {
+  const resetForm = () => {
+    setShowForm(false)
+    setMode('file')
+    setFileType('brief')
+    setDescription('')
+    setUrlValue('')
+    setUrlName('')
+    setError(null)
+  }
+
+  const handleFileUpload = useCallback(async (file: File) => {
     setUploading(true)
     setError(null)
     setProgress(0)
-
-    const result = await uploadFile(
-      file,
-      dealId,
-      type as AttachmentType,
-      companyId,
-      (pct) => setProgress(pct),
-    )
-
-    if (!result) {
-      setError('Upload failed. Check that the storage bucket exists.')
-    }
+    const result = await uploadFile(file, dealId, fileType, companyId, (pct) => setProgress(pct), description || undefined)
+    if (!result) setError('Upload failed.')
+    else resetForm()
     setUploading(false)
-  }, [dealId, type, companyId, uploadFile])
+  }, [dealId, fileType, companyId, description, uploadFile])
 
-  const handleDelete = useCallback(async () => {
-    if (!existingAttachment) return
-    await deleteAttachment(existingAttachment)
-  }, [existingAttachment, deleteAttachment])
+  const handleUrlAttach = useCallback(async () => {
+    if (!urlValue.trim()) { setError('URL is required'); return }
+    const name = urlName.trim() || urlValue.replace(/^https?:\/\//, '').slice(0, 60)
+    setUploading(true)
+    setError(null)
+    const result = await attachUrl(urlValue.trim(), dealId, fileType, name, description || undefined, companyId)
+    if (!result) setError('Failed to attach URL.')
+    else resetForm()
+    setUploading(false)
+  }, [dealId, fileType, companyId, description, urlValue, urlName, attachUrl])
 
-  // Format file size for display
   const formatSize = (bytes?: number) => {
     if (!bytes) return ''
     if (bytes < 1024) return `${bytes} B`
@@ -727,94 +751,185 @@ function FileSlot({ label, type, dealId }: { label: string; type: string; dealId
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }
 
-  // If a file is already uploaded, show it
-  if (existingAttachment) {
-    return (
-      <div className="border-2 border-green-200 bg-green-50 rounded-xl p-4 text-center relative group">
-        <div className="text-2xl mb-1">{type === 'brief' ? '📋' : '📝'}</div>
-        <p className="text-xs font-semibold text-green-800">{label}</p>
-        {existingAttachment.publicUrl ? (
-          <a
-            href={existingAttachment.publicUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[11px] text-brand-600 hover:text-brand-700 underline mt-1 block truncate max-w-full"
-            title={existingAttachment.fileName}
-            onClick={e => e.stopPropagation()}
-          >
-            {existingAttachment.fileName}
-          </a>
-        ) : (
-          <p className="text-[11px] text-green-700 mt-1 truncate" title={existingAttachment.fileName}>
-            {existingAttachment.fileName}
-          </p>
-        )}
-        <p className="text-[10px] text-green-600 mt-0.5">
-          {formatSize(existingAttachment.fileSize)}
-        </p>
-        {/* Delete button */}
-        <button
-          onClick={handleDelete}
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-600 text-xs p-1 rounded-md hover:bg-red-50"
-          title="Remove file"
-        >
-          &times;
-        </button>
-      </div>
-    )
-  }
-
-  // Upload in progress
-  if (uploading) {
-    return (
-      <div className="border-2 border-brand-300 bg-brand-50 rounded-xl p-4 text-center">
-        <div className="text-2xl mb-1 animate-pulse">{type === 'brief' ? '📋' : '📝'}</div>
-        <p className="text-xs font-semibold text-brand-700">{label}</p>
-        <div className="w-full bg-brand-100 rounded-full h-1.5 mt-2">
-          <div
-            className="bg-brand-500 h-1.5 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-[10px] text-brand-600 mt-1">Uploading... {progress}%</p>
-      </div>
-    )
-  }
-
-  // Empty slot — drag and drop / click to upload
   return (
-    <div
-      className={`border-2 border-dashed rounded-xl p-4 text-center transition-colors cursor-pointer ${
-        dragOver ? 'border-brand-400 bg-brand-50' : 'border-border hover:border-brand-300 hover:bg-surface-muted'
-      }`}
-      onDragOver={e => { e.preventDefault(); setDragOver(true) }}
-      onDragLeave={() => setDragOver(false)}
-      onDrop={e => {
-        e.preventDefault()
-        setDragOver(false)
-        const files = e.dataTransfer.files
-        if (files.length > 0) handleUpload(files[0])
-      }}
-      onClick={() => document.getElementById(fileInputId)?.click()}
-    >
-      <input
-        id={fileInputId}
-        type="file"
-        className="hidden"
-        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-        onChange={e => {
-          const file = e.target.files?.[0]
-          if (file) handleUpload(file)
-          // Reset so same file can be re-selected
-          e.target.value = ''
-        }}
-      />
-      <div className="text-2xl mb-1">{type === 'brief' ? '📋' : '📝'}</div>
-      <p className="text-xs font-semibold text-text-primary">{label}</p>
-      <p className="text-[10px] text-text-muted mt-0.5">Drop file or click to upload</p>
-      {error && (
-        <p className="text-[10px] text-red-500 mt-1">{error}</p>
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xs font-semibold text-text-muted uppercase tracking-wider">Documents</h3>
+        {!showForm && (
+          <button
+            onClick={() => setShowForm(true)}
+            className="text-[11px] text-brand-600 hover:text-brand-700 font-medium"
+          >
+            + Add
+          </button>
+        )}
+      </div>
+
+      {/* Existing documents list */}
+      {docs.length > 0 && (
+        <div className="space-y-1.5 mb-3">
+          {docs.map(doc => (
+            <DocumentRow key={doc.id} doc={doc} onDelete={() => deleteAttachment(doc)} formatSize={formatSize} />
+          ))}
+        </div>
       )}
+
+      {docs.length === 0 && !showForm && (
+        <p className="text-[11px] text-text-muted italic mb-3">No documents yet</p>
+      )}
+
+      {/* Add document form */}
+      {showForm && (
+        <div className="border border-border rounded-lg p-3 space-y-2.5 bg-surface-muted">
+          {/* Mode toggle */}
+          <div className="flex gap-1 bg-white rounded-md p-0.5 border border-border">
+            <button
+              onClick={() => setMode('file')}
+              className={`flex-1 text-[11px] py-1 rounded ${mode === 'file' ? 'bg-brand-600 text-white' : 'text-text-muted hover:text-text-primary'}`}
+            >
+              Upload File
+            </button>
+            <button
+              onClick={() => setMode('url')}
+              className={`flex-1 text-[11px] py-1 rounded ${mode === 'url' ? 'bg-brand-600 text-white' : 'text-text-muted hover:text-text-primary'}`}
+            >
+              Attach URL
+            </button>
+          </div>
+
+          {/* Type selector */}
+          <select
+            value={fileType}
+            onChange={e => setFileType(e.target.value as AttachmentType)}
+            className="w-full text-xs border border-border rounded-md px-2 py-1.5 bg-white text-text-primary"
+          >
+            {(Object.entries(ATTACHMENT_TYPE_META) as [AttachmentType, { label: string; icon: string }][]).map(([key, meta]) => (
+              <option key={key} value={key}>{meta.icon} {meta.label}</option>
+            ))}
+          </select>
+
+          {/* Description */}
+          <input
+            type="text"
+            placeholder="Description (optional)"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            className="w-full text-xs border border-border rounded-md px-2 py-1.5 bg-white text-text-primary placeholder:text-text-muted"
+          />
+
+          {mode === 'file' ? (
+            /* File upload area */
+            uploading ? (
+              <div className="border border-brand-300 bg-brand-50 rounded-lg p-3 text-center">
+                <div className="w-full bg-brand-100 rounded-full h-1.5">
+                  <div className="bg-brand-500 h-1.5 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+                </div>
+                <p className="text-[10px] text-brand-600 mt-1">Uploading... {progress}%</p>
+              </div>
+            ) : (
+              <div
+                className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                  dragOver ? 'border-brand-400 bg-brand-50' : 'border-border hover:border-brand-300'
+                }`}
+                onDragOver={e => { e.preventDefault(); setDragOver(true) }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={e => {
+                  e.preventDefault()
+                  setDragOver(false)
+                  if (e.dataTransfer.files.length > 0) handleFileUpload(e.dataTransfer.files[0])
+                }}
+                onClick={() => document.getElementById(fileInputId)?.click()}
+              >
+                <input
+                  id={fileInputId}
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt,.md,.csv"
+                  onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (file) handleFileUpload(file)
+                    e.target.value = ''
+                  }}
+                />
+                <p className="text-xs text-text-muted">Drop file or click to upload</p>
+              </div>
+            )
+          ) : (
+            /* URL input */
+            <div className="space-y-2">
+              <input
+                type="url"
+                placeholder="https://..."
+                value={urlValue}
+                onChange={e => setUrlValue(e.target.value)}
+                className="w-full text-xs border border-border rounded-md px-2 py-1.5 bg-white text-text-primary placeholder:text-text-muted"
+              />
+              <input
+                type="text"
+                placeholder="Display name (optional)"
+                value={urlName}
+                onChange={e => setUrlName(e.target.value)}
+                className="w-full text-xs border border-border rounded-md px-2 py-1.5 bg-white text-text-primary placeholder:text-text-muted"
+              />
+              <button
+                onClick={handleUrlAttach}
+                disabled={uploading || !urlValue.trim()}
+                className="w-full text-xs font-medium py-1.5 rounded-md bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50"
+              >
+                Attach URL
+              </button>
+            </div>
+          )}
+
+          {error && <p className="text-[10px] text-red-500">{error}</p>}
+
+          <button onClick={resetForm} className="text-[11px] text-text-muted hover:text-text-primary w-full text-center">
+            Cancel
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DocumentRow({ doc, onDelete, formatSize }: { doc: Attachment; onDelete: () => void; formatSize: (b?: number) => string }) {
+  const meta = ATTACHMENT_TYPE_META[doc.fileType] ?? ATTACHMENT_TYPE_META.other
+  const isUrl = !doc.storagePath && !!doc.publicUrl
+
+  return (
+    <div className="flex items-center gap-2 p-2 rounded-lg border border-border bg-white group hover:border-brand-200 transition-colors">
+      <span className="text-base flex-shrink-0">{meta.icon}</span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          {doc.publicUrl ? (
+            <a
+              href={doc.publicUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-brand-600 hover:text-brand-700 truncate"
+              title={doc.fileName}
+              onClick={e => e.stopPropagation()}
+            >
+              {doc.fileName}
+            </a>
+          ) : (
+            <span className="text-xs font-medium text-text-primary truncate" title={doc.fileName}>{doc.fileName}</span>
+          )}
+          {isUrl && <span className="text-[9px] bg-blue-100 text-blue-700 px-1 py-0.5 rounded flex-shrink-0">URL</span>}
+        </div>
+        <div className="flex items-center gap-2 mt-0.5">
+          <span className="text-[10px] text-text-muted">{meta.label}</span>
+          {doc.fileSize ? <span className="text-[10px] text-text-muted">{formatSize(doc.fileSize)}</span> : null}
+          {doc.description && <span className="text-[10px] text-text-muted truncate" title={doc.description}>- {doc.description}</span>}
+        </div>
+      </div>
+      <button
+        onClick={onDelete}
+        className="opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-600 text-xs p-1 rounded hover:bg-red-50 flex-shrink-0"
+        title="Remove"
+      >
+        &times;
+      </button>
     </div>
   )
 }

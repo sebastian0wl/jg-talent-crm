@@ -4,7 +4,7 @@
 
 // ── Pipeline Definitions ──
 
-export type PipelineId = 'content' | 'partnership' | 'service'
+export type PipelineId = 'content' | 'partnership' | 'service' | 'education'
 
 export type ContentStage =
   | 'Inbound'           // They reached out or we identified opportunity
@@ -43,7 +43,18 @@ export type ServiceStage =
   | 'Paid'             // Paid → gate: confirm payment
   | 'Lost'             // Dead deal
 
-export type DealStage = ContentStage | PartnershipStage | ServiceStage
+export type EducationStage =
+  | 'Inbound'           // Opportunity identified
+  | 'Curriculum Design'  // Designing workshop/course content
+  | 'Sponsors Open'      // Selling sponsor slots
+  | 'Sponsors Confirmed' // All sponsor slots filled
+  | 'Promoting'          // Marketing the event
+  | 'Live'               // Event is happening
+  | 'Delivered'          // Event complete
+  | 'Paid'               // All payments received
+  | 'Lost'               // Cancelled
+
+export type DealStage = ContentStage | PartnershipStage | ServiceStage | EducationStage
 
 // What the user sees as deal type
 export type DealType =
@@ -53,11 +64,14 @@ export type DealType =
   | 'Brand Ambassador'
   | 'Affiliate'
   | 'Education Partnership'
+  | 'Event Sponsorship'
   | 'Creative Direction'
   | 'Brand Design'
   | 'Consulting'
   | 'Speaking'
   | 'Workshop'
+  | 'Live Event'
+  | 'Cohort Course'
 
 // Map deal types → pipelines
 export const DEAL_TYPE_PIPELINE: Record<DealType, PipelineId> = {
@@ -67,11 +81,14 @@ export const DEAL_TYPE_PIPELINE: Record<DealType, PipelineId> = {
   'Brand Ambassador': 'partnership',
   'Affiliate': 'partnership',
   'Education Partnership': 'partnership',
+  'Event Sponsorship': 'partnership',
   'Creative Direction': 'service',
   'Brand Design': 'service',
   'Consulting': 'service',
   'Speaking': 'service',
-  'Workshop': 'service',
+  'Workshop': 'education',
+  'Live Event': 'education',
+  'Cohort Course': 'education',
 }
 
 // Ordered stages per pipeline (for kanban rendering + progression)
@@ -79,6 +96,7 @@ export const PIPELINE_STAGES: Record<PipelineId, string[]> = {
   content: ['Inbound', 'Qualifying', 'Brief Received', 'Rate Sent', 'Negotiating', 'Terms Agreed', 'Contract Signed', 'Creating', 'Delivered', 'Paid'],
   partnership: ['Inbound', 'Discovery Call', 'Brief Received', 'Proposal Sent', 'Negotiating', 'Terms Agreed', 'Contract Signed', 'Active', 'Renewal'],
   service: ['Inquiry', 'Scoping Call', 'SOW Sent', 'Negotiating', 'Terms Agreed', 'Contract Signed', 'In Progress', 'Delivered', 'Paid'],
+  education: ['Inbound', 'Curriculum Design', 'Sponsors Open', 'Sponsors Confirmed', 'Promoting', 'Live', 'Delivered', 'Paid'],
 }
 
 // Stages that auto-set contractedAt to today when entered
@@ -106,6 +124,12 @@ export const STAGE_GATES: Record<string, string> = {
   'Scoping Call': 'Send scope of work',
   'SOW Sent': 'Negotiate terms',
   'In Progress': 'Deliver final work',
+  // Education
+  'Curriculum Design': 'Finalize curriculum and open sponsor slots',
+  'Sponsors Open': 'Fill all sponsor slots',
+  'Sponsors Confirmed': 'Begin promoting the event',
+  'Promoting': 'Run the event',
+  'Live': 'Complete and deliver event',
   // Shared
   'Paid': 'Deal complete',
 }
@@ -114,12 +138,14 @@ export const PIPELINE_LABELS: Record<PipelineId, string> = {
   content: 'Content Deals',
   partnership: 'Partnerships',
   service: 'Services',
+  education: 'Education',
 }
 
 export const PIPELINE_COLORS: Record<PipelineId, string> = {
   content: '#3b82f6',
   partnership: '#8b5cf6',
   service: '#f59e0b',
+  education: '#10b981',
 }
 
 // ── Companies ──
@@ -206,7 +232,28 @@ export interface ActivityDeal {
 }
 
 // ── Attachments ──
-export type AttachmentType = 'brief' | 'contract' | 'invoice' | 'deliverable' | 'proposal' | 'rate_card' | 'other'
+export type AttachmentType =
+  | 'brief'
+  | 'contract'
+  | 'invoice'
+  | 'deliverable'
+  | 'proposal'
+  | 'rate_card'
+  | 'meeting_transcript'
+  | 'notes'
+  | 'other'
+
+export const ATTACHMENT_TYPE_META: Record<AttachmentType, { label: string; icon: string }> = {
+  brief: { label: 'Project Brief', icon: '📋' },
+  contract: { label: 'Contract', icon: '📝' },
+  invoice: { label: 'Invoice', icon: '🧾' },
+  deliverable: { label: 'Deliverable', icon: '📦' },
+  proposal: { label: 'Proposal', icon: '📄' },
+  rate_card: { label: 'Rate Card', icon: '💰' },
+  meeting_transcript: { label: 'Meeting Transcript', icon: '🎙️' },
+  notes: { label: 'Notes', icon: '🗒️' },
+  other: { label: 'Other', icon: '📎' },
+}
 
 export interface Attachment {
   id: string
@@ -216,7 +263,7 @@ export interface Attachment {
   fileName: string
   fileSize?: number
   mimeType?: string
-  storagePath: string
+  storagePath?: string
   publicUrl?: string
   description?: string
   uploadedBy?: 'justin' | 'jamey' | 'agent' | 'system'

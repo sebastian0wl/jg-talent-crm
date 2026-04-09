@@ -1,9 +1,9 @@
 import type { DealScore, EmailThread } from '../types'
 
-// ── Deal Evaluator Scores ──
+// -- Deal Evaluator Scores --
 
 export const dealScores: DealScore[] = [
-  // Envato — Education Partnership (d-1)
+  // Envato - Education Partnership (d-1)
   {
     dealId: 'd-1', overallGrade: 'A', evaluatedAt: '2026-04-05',
     dimensions: [
@@ -14,11 +14,11 @@ export const dealScores: DealScore[] = [
       { dimension: 'Education Funnel', grade: 'S', reasoning: 'Direct pipeline to Maven course. Tutorials = "go deeper in my course" CTA. Perfect top-of-funnel.' },
       { dimension: 'Relationship Compound', grade: 'A', reasoning: 'Multi-tutorial deal = ongoing relationship. Internal champion (Sarah Chen). Could lead to platform deal.' },
       { dimension: 'Creative Value', grade: 'B', reasoning: 'Tutorials are useful but not portfolio-worthy. Good for authority building, not for creative portfolio.' },
-      { dimension: 'Time Cost', grade: 'B', reasoning: '3-5 tutorials plus templates. Moderate time investment — probably 2-3 weeks of production total.' },
+      { dimension: 'Time Cost', grade: 'B', reasoning: '3-5 tutorials plus templates. Moderate time investment - probably 2-3 weeks of production total.' },
       { dimension: 'Strategic Timing', grade: 'A', reasoning: 'Pre-Cohort 3 launch. Building top-of-funnel content that feeds the course is exactly the right move right now.' },
     ],
     upgradeMoves: [
-      { dimension: 'Brand Prestige', currentGrade: 'B', potentialGrade: 'A', move: 'Frame as "Curriculum Advisor for Envato" not "Sponsored Creator" — different title, different perception.' },
+      { dimension: 'Brand Prestige', currentGrade: 'B', potentialGrade: 'A', move: 'Frame as "Curriculum Advisor for Envato" not "Sponsored Creator" - different title, different perception.' },
       { dimension: 'Creative Value', currentGrade: 'B', potentialGrade: 'A', move: 'Negotiate creative control so Jamey picks topics. If she\'s teaching her actual workflow, the tutorials become portfolio pieces.' },
       { dimension: 'Time Cost', currentGrade: 'B', potentialGrade: 'A', move: 'Reduce to 3 tutorials + 1 SREF pack (half the production, keep 80% of the value).' },
     ],
@@ -42,19 +42,19 @@ export const dealScores: DealScore[] = [
     positioningAngles: [
       'The educator angle: "I\'m building the definitive AI design curriculum, starting with these tutorials for Envato."',
       'The credibility transfer angle: "Envato picked me as their AI design curriculum advisor." (title framing matters)',
-      'The practitioner angle: "Every tutorial teaches my real workflow — not theory, not prompts, real professional process."',
+      'The practitioner angle: "Every tutorial teaches my real workflow - not theory, not prompts, real professional process."',
     ],
     recommendation: 'Strong deal. The Distribution + Education Funnel combo makes this a no-brainer for the Maven pipeline. Push for Path B (fewer tutorials, better title, creative control) to optimize time cost. Don\'t go below $40K.',
   },
 
-  // Krea AI — Ambassador (d-2)
+  // Krea AI - Ambassador (d-2)
   {
     dealId: 'd-2', overallGrade: 'A', evaluatedAt: '2026-04-05',
     dimensions: [
       { dimension: 'Cash Value', grade: 'A', reasoning: '$30K for ongoing content. Strong value for ambassador deal.' },
       { dimension: 'Brand Prestige', grade: 'A', reasoning: 'Krea is respected in AI creative tools. Multi-model approach seen as forward-thinking. Designers talk about it positively.' },
       { dimension: 'Distribution', grade: 'B', reasoning: 'Krea has growing but not massive social presence. Some distribution through their platform features.' },
-      { dimension: 'Audience Match', grade: 'S', reasoning: 'Krea users ARE Jamey\'s exact audience — AI-forward designers and creatives using generative tools professionally.' },
+      { dimension: 'Audience Match', grade: 'S', reasoning: 'Krea users ARE Jamey\'s exact audience - AI-forward designers and creatives using generative tools professionally.' },
       { dimension: 'Education Funnel', grade: 'A', reasoning: 'Krea users are exactly who\'d buy the Maven course. Natural "learn my full workflow" upsell.' },
       { dimension: 'Relationship Compound', grade: 'A', reasoning: 'Ambassador deal = long-term relationship. Multi-model platform means staying power. Could grow into advisory role.' },
       { dimension: 'Creative Value', grade: 'A', reasoning: 'Jamey genuinely uses and loves Krea. Content will be authentic and portfolio-worthy.' },
@@ -77,59 +77,14 @@ export const dealScores: DealScore[] = [
       },
     ],
     positioningAngles: [
-      'The practitioner angle: "Krea is in my actual daily workflow. This isn\'t a sponsorship — it\'s documenting what I already do."',
+      'The practitioner angle: "Krea is in my actual daily workflow. This isn\'t a sponsorship - it\'s documenting what I already do."',
       'The insider angle: "I get early access to everything Krea ships. You see it here first."',
       'The contrarian angle: "Everyone\'s fighting over which AI model is best. I use ALL of them through Krea."',
     ],
     recommendation: 'Excellent deal. Authentic product-market fit (Jamey actually uses Krea). Push for featured creator spot on their platform to improve distribution. This is a foundation partnership that grows with Krea.',
   },
 
-  // Lovable — Sponsored Video (d-11)
-  {
-    dealId: 'd-11', overallGrade: 'B', evaluatedAt: '2026-04-07',
-    dimensions: [
-      { dimension: 'Cash Value', grade: 'B', reasoning: '$20K target, they countered at $15K. At $15K it\'s a C. Need to hold $18K+ floor.' },
-      { dimension: 'Brand Prestige', grade: 'A', reasoning: 'Lovable is hot in AI dev tools. Designers know it. Good look on resume.' },
-      { dimension: 'Distribution', grade: 'B', reasoning: 'Lovable has strong social presence but mostly dev-focused. Some cross-pollination potential.' },
-      { dimension: 'Audience Match', grade: 'B', reasoning: 'Lovable audience is more developers than designers. Partial overlap through the Figma-to-code bridge.' },
-      { dimension: 'Education Funnel', grade: 'B', reasoning: 'Tangentially related. Designers who want to ship without devs might buy the course, but it\'s not a direct pipeline.' },
-      { dimension: 'Relationship Compound', grade: 'B', reasoning: 'One-off sponsored post. Could lead to more but no guarantee. Nice internal champion (Emma).' },
-      { dimension: 'Creative Value', grade: 'A', reasoning: 'Figma-to-code workflow is genuinely cool content. Jamey would enjoy making this and it showcases real skills.' },
-      { dimension: 'Time Cost', grade: 'A', reasoning: 'Single video + thread. 2-3 days of work. Good $/hr ratio at $20K.' },
-      { dimension: 'Strategic Timing', grade: 'B', reasoning: 'No urgency either way. Fits the content calendar but isn\'t critical.' },
-    ],
-    upgradeMoves: [
-      { dimension: 'Cash Value', currentGrade: 'B', potentialGrade: 'A', move: 'Hold at $20K. Add usage rights (+40%) because they\'ll want to run this as paid media — that gets them to $28K.' },
-      { dimension: 'Audience Match', currentGrade: 'B', potentialGrade: 'A', move: 'Position the video for designers who want to ship (not devs who want to design). Reframe the audience angle.' },
-      { dimension: 'Education Funnel', currentGrade: 'B', potentialGrade: 'A', move: 'Include a "learn my full design-to-code workflow" CTA that drives to Maven course.' },
-      { dimension: 'Relationship Compound', currentGrade: 'B', potentialGrade: 'A', move: 'Propose 2-part series instead of 1 video. Locks in repeat relationship and doubles the value.' },
-    ],
-    viabilityPaths: [
-      {
-        name: 'Current Deal', label: 'Path A', overallGrade: 'B', verdict: 'viable',
-        changes: ['$15K (their offer), single video + thread'],
-        whatMakesItWork: 'Good creative brief, light time cost.',
-        whatHoldsItBack: '$15K is below our comfort zone for video. Not enough cash to justify the effort.',
-      },
-      {
-        name: 'Counter Offer', label: 'Path B', overallGrade: 'A', verdict: 'strong',
-        changes: ['Counter at $20K', 'Add Maven course CTA', 'Negotiate usage rights discussion for later upsell'],
-        whatMakesItWork: 'Better cash + education funnel value.',
-      },
-      {
-        name: 'Dream Version', label: 'Path C', overallGrade: 'A', verdict: 'no-brainer',
-        changes: ['$20K base + $8K usage rights = $28K', '2-part series (design + code)', 'Featured on Lovable\'s blog and newsletter', 'Maven course CTA in both videos'],
-      },
-    ],
-    positioningAngles: [
-      'The practitioner angle: "I use Lovable to ship my client brand identities without waiting for a developer."',
-      'The results angle: "Watch me take a Figma design to a live website in 20 minutes."',
-      'The educator angle: "Designers who can ship are 10x more valuable. Here\'s the workflow."',
-    ],
-    recommendation: 'Viable at $20K, not at $15K. Counter at $20K with the Figma-to-code angle. If they push back, add usage rights discussion as a sweetener. Walk at $18K floor.',
-  },
-
-  // Reve.art — Ambassador (d-7)
+  // Reve.art - Ambassador (d-7)
   {
     dealId: 'd-7', overallGrade: 'B', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -161,13 +116,13 @@ export const dealScores: DealScore[] = [
     ],
     positioningAngles: [
       'The insider angle: "I\'m one of the first professional designers building with Reve. Here\'s what I\'m seeing."',
-      'The practitioner angle: "This is genuinely in my daily workflow. Not a sponsorship — a documentation of my process."',
+      'The practitioner angle: "This is genuinely in my daily workflow. Not a sponsorship - a documentation of my process."',
       'The contrarian angle: "While everyone\'s fighting over Midjourney vs Flux, I\'m using this."',
     ],
-    recommendation: 'Worth pursuing. The strategic timing is perfect — be early to a rising brand. Push for $20K with tutorial component and featured creator placement. The relationship compounds if Reve takes off.',
+    recommendation: 'Worth pursuing. The strategic timing is perfect - be early to a rising brand. Push for $20K with tutorial component and featured creator placement. The relationship compounds if Reve takes off.',
   },
 
-  // Decimals — Affiliate (d-4)
+  // Decimals - Affiliate (d-4)
   {
     dealId: 'd-4', overallGrade: 'B', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -190,7 +145,7 @@ export const dealScores: DealScore[] = [
       {
         name: 'Current Deal', label: 'Path A', overallGrade: 'B', verdict: 'viable',
         changes: ['Post thread + newsletter with affiliate link'],
-        whatMakesItWork: 'Time Cost (S) — it\'s basically free effort. Already written.',
+        whatMakesItWork: 'Time Cost (S) - it\'s basically free effort. Already written.',
         whatHoldsItBack: 'Cash is speculative. If signups are low, it was a waste of a post slot.',
       },
       {
@@ -202,10 +157,10 @@ export const dealScores: DealScore[] = [
       'The insider angle: "I joined a collective that flips how design hiring works."',
       'The practitioner angle: "Hot take: designers should not be applying to jobs."',
     ],
-    recommendation: 'Do it — the time cost is almost zero and the audience match is perfect. Track signups and use the data to upsell Danny to paid. This is a seeding play, not a cash play.',
+    recommendation: 'Do it - the time cost is almost zero and the audience match is perfect. Track signups and use the data to upsell Danny to paid. This is a seeding play, not a cash play.',
   },
 
-  // Freepik — Education Partnership (d-10)
+  // Freepik - Education Partnership (d-10)
   {
     dealId: 'd-10', overallGrade: 'B', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -240,10 +195,10 @@ export const dealScores: DealScore[] = [
       'The educator angle: "Teaching professional AI design workflows to the world\'s largest design community."',
       'The contrarian angle: "Freepik is evolving from assets to AI. I\'m helping lead that transition."',
     ],
-    recommendation: 'Good deal with the right framing. Meeting tomorrow — push for workshop format (less time), newsletter feature (distribution), and educator title (prestige). The combo of cash + distribution + education funnel is compelling.',
+    recommendation: 'Good deal with the right framing. Meeting tomorrow - push for workshop format (less time), newsletter feature (distribution), and educator title (prestige). The combo of cash + distribution + education funnel is compelling.',
   },
 
-  // ElevenLabs — Sponsored Post (d-3)
+  // ElevenLabs - Sponsored Post (d-3)
   {
     dealId: 'd-3', overallGrade: 'A', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -281,12 +236,12 @@ export const dealScores: DealScore[] = [
     positioningAngles: [
       'The practitioner angle: "I use ElevenLabs to dub my design tutorials into 29 languages. Here\'s how it actually works."',
       'The creator economy angle: "Your content shouldn\'t be limited by language. This changes everything for global reach."',
-      'The workflow angle: "Dubbing v2 is the missing piece in my AI creative workflow — design, voice, publish."',
+      'The workflow angle: "Dubbing v2 is the missing piece in my AI creative workflow - design, voice, publish."',
     ],
-    recommendation: 'Take this deal immediately. Brand prestige (S) + time cost (S) is the rare combo where you get premium brand association for minimal effort. Ask for usage rights to bump cash. The agency relationship (Kudos) is fine — perform well and ElevenLabs will come direct next time.',
+    recommendation: 'Take this deal immediately. Brand prestige (S) + time cost (S) is the rare combo where you get premium brand association for minimal effort. Ask for usage rights to bump cash. The agency relationship (Kudos) is fine - perform well and ElevenLabs will come direct next time.',
   },
 
-  // Grok — QRT Campaign (d-5)
+  // Grok - QRT Campaign (d-5)
   {
     dealId: 'd-5', overallGrade: 'B', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -301,8 +256,8 @@ export const dealScores: DealScore[] = [
       { dimension: 'Strategic Timing', grade: 'B', reasoning: 'AI image gen is hot but Grok isn\'t the market leader here. No urgency.' },
     ],
     upgradeMoves: [
-      { dimension: 'Cash Value', currentGrade: 'C', potentialGrade: 'B', move: 'Counter at $12K. Add a dedicated post comparing Grok image gen to alternatives — more value for them, more cash for us.' },
-      { dimension: 'Education Funnel', currentGrade: 'C', potentialGrade: 'B', move: 'Frame the content around "multi-model workflows" — Grok as one tool in the professional AI design stack, which leads to Maven.' },
+      { dimension: 'Cash Value', currentGrade: 'C', potentialGrade: 'B', move: 'Counter at $12K. Add a dedicated post comparing Grok image gen to alternatives - more value for them, more cash for us.' },
+      { dimension: 'Education Funnel', currentGrade: 'C', potentialGrade: 'B', move: 'Frame the content around "multi-model workflows" - Grok as one tool in the professional AI design stack, which leads to Maven.' },
       { dimension: 'Creative Value', currentGrade: 'B', potentialGrade: 'A', move: 'Negotiate a dedicated video/thread instead of just QRTs. Gives Jamey room to showcase real creative process.' },
     ],
     viabilityPaths: [
@@ -324,12 +279,12 @@ export const dealScores: DealScore[] = [
     ],
     positioningAngles: [
       'The practitioner angle: "I use Grok image gen in my actual workflow. Here\'s when it outperforms everything else."',
-      'The multi-model angle: "The best AI designers don\'t pick one tool — they use the right model for each task."',
+      'The multi-model angle: "The best AI designers don\'t pick one tool - they use the right model for each task."',
     ],
     recommendation: 'Marginal at $8K but the time cost is so low it\'s hard to say no. Counter at $12K with a dedicated thread. Walk at $8K only if the content is truly minimal (sub-2 hours). Don\'t let this become a time sink.',
   },
 
-  // Maven Workshop — AI for E-Commerce Leaders (d-12)
+  // Maven Workshop - AI for E-Commerce Leaders (d-12)
   {
     dealId: 'd-12', overallGrade: 'B', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -346,7 +301,7 @@ export const dealScores: DealScore[] = [
     upgradeMoves: [
       { dimension: 'Cash Value', currentGrade: 'B', potentialGrade: 'A', move: 'Secure 2 sponsors at $2K each (Flora + Instant) to guarantee $4K floor regardless of enrollment. Total becomes $13K.' },
       { dimension: 'Distribution', currentGrade: 'B', potentialGrade: 'A', move: 'Start promo immediately on Jamey\'s channels. Don\'t wait for Maven\'s timeline. Build urgency with a waitlist.' },
-      { dimension: 'Time Cost', currentGrade: 'C', potentialGrade: 'B', move: 'Repurpose existing course content for the workshop. Don\'t build from scratch — remix what\'s already proven.' },
+      { dimension: 'Time Cost', currentGrade: 'C', potentialGrade: 'B', move: 'Repurpose existing course content for the workshop. Don\'t build from scratch - remix what\'s already proven.' },
     ],
     viabilityPaths: [
       {
@@ -367,13 +322,13 @@ export const dealScores: DealScore[] = [
     ],
     positioningAngles: [
       'The exclusive access angle: "This is the only time I\'m teaching this live before Cohort 3 launches."',
-      'The practitioner angle: "Learn the exact AI workflows I use for real e-commerce clients — not theory, not demos."',
+      'The practitioner angle: "Learn the exact AI workflows I use for real e-commerce clients - not theory, not demos."',
       'The urgency angle: "30 spots. 3 hours. The full playbook for AI in e-commerce design."',
     ],
-    recommendation: 'Do this for the strategic value, not the cash. Education Funnel (S) + Strategic Timing (S) make this a Cohort 3 accelerator. Lock in sponsors immediately to de-risk. Start promoting on Jamey\'s channels today — don\'t wait for Maven\'s 1-week window.',
+    recommendation: 'Do this for the strategic value, not the cash. Education Funnel (S) + Strategic Timing (S) make this a Cohort 3 accelerator. Lock in sponsors immediately to de-risk. Start promoting on Jamey\'s channels today - don\'t wait for Maven\'s 1-week window.',
   },
 
-  // Flora.ai — Maven Workshop Sponsor (d-13)
+  // Flora.ai - Maven Workshop Sponsor (d-13)
   {
     dealId: 'd-13', overallGrade: 'C', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -396,7 +351,7 @@ export const dealScores: DealScore[] = [
       {
         name: 'Current Deal', label: 'Path A', overallGrade: 'C', verdict: 'viable',
         changes: ['$2K sponsor mention + demo during workshop'],
-        whatMakesItWork: 'Time Cost (A) — it\'s incremental money for near-zero effort. Existing relationship makes it easy.',
+        whatMakesItWork: 'Time Cost (A) - it\'s incremental money for near-zero effort. Existing relationship makes it easy.',
         whatHoldsItBack: '$2K is small. If Flora doesn\'t promote the workshop, it\'s a one-way value exchange.',
       },
       {
@@ -413,10 +368,10 @@ export const dealScores: DealScore[] = [
       'The authentic angle: "I\'ve already driven 487 clicks and 178 leads for Flora. This is a proven partnership, not a test."',
       'The e-commerce angle: "Flora.ai is powering the next wave of AI commerce. I\'m showing my students the tools that actually work."',
     ],
-    recommendation: 'Easy yes at $2K for near-zero effort. But push for Flora to co-promote the workshop — their user base IS the target audience. The real value is deepening the relationship for a bigger ambassador deal post-workshop. Track the metrics.',
+    recommendation: 'Easy yes at $2K for near-zero effort. But push for Flora to co-promote the workshop - their user base IS the target audience. The real value is deepening the relationship for a bigger ambassador deal post-workshop. Track the metrics.',
   },
 
-  // Instant.so — Maven Workshop Sponsor (d-14)
+  // Instant.so - Maven Workshop Sponsor (d-14)
   {
     dealId: 'd-14', overallGrade: 'C', evaluatedAt: '2026-04-08',
     dimensions: [
@@ -424,7 +379,7 @@ export const dealScores: DealScore[] = [
       { dimension: 'Brand Prestige', grade: 'C', reasoning: 'Instant.so is early-stage. Not widely known yet. Low prestige signal but no downside either.' },
       { dimension: 'Distribution', grade: 'D', reasoning: 'Instant.so has minimal reach. Very early company. Almost no distribution benefit.' },
       { dimension: 'Audience Match', grade: 'B', reasoning: 'AI website builder is relevant to e-commerce leaders, though more of a tool demo than a perfect fit.' },
-      { dimension: 'Education Funnel', grade: 'B', reasoning: 'Showing Instant.so in workshop demonstrates "ship fast with AI" — relevant to Maven course narrative.' },
+      { dimension: 'Education Funnel', grade: 'B', reasoning: 'Showing Instant.so in workshop demonstrates "ship fast with AI" - relevant to Maven course narrative.' },
       { dimension: 'Relationship Compound', grade: 'B', reasoning: 'Sam confirmed interest quickly. Jamey has early access to AI features. Could grow if Instant.so takes off.' },
       { dimension: 'Creative Value', grade: 'C', reasoning: 'Sponsor slot. Demo is functional but not showcase-worthy.' },
       { dimension: 'Time Cost', grade: 'A', reasoning: 'Brief demo during existing workshop. Near-zero incremental effort.' },
@@ -439,7 +394,7 @@ export const dealScores: DealScore[] = [
       {
         name: 'Current Deal', label: 'Path A', overallGrade: 'C', verdict: 'marginal',
         changes: ['$2K sponsor mention + demo during workshop'],
-        whatMakesItWork: 'Time Cost (A) — free money on an existing event. Sam is responsive and easy to work with.',
+        whatMakesItWork: 'Time Cost (A) - free money on an existing event. Sam is responsive and easy to work with.',
         whatHoldsItBack: 'Low prestige, no distribution, modest cash. It\'s filler, not a feature.',
       },
       {
@@ -456,24 +411,24 @@ export const dealScores: DealScore[] = [
       'The builder angle: "I shipped a client website in 15 minutes with Instant.so during a live workshop. The audience lost it."',
       'The early-access angle: "I\'m testing AI features before they\'re public. Here\'s what\'s coming."',
     ],
-    recommendation: 'Take the $2K — it\'s free money on an event Jamey is already doing. But don\'t over-invest in the relationship until Instant.so proves distribution value. Email Sam the sponsorship proposal with tiers today — Apr 16 deadline is tight.',
+    recommendation: 'Take the $2K - it\'s free money on an event Jamey is already doing. But don\'t over-invest in the relationship until Instant.so proves distribution value. Email Sam the sponsorship proposal with tiers today - Apr 16 deadline is tight.',
   },
 ]
 
 export const getDealScore = (dealId: string) => dealScores.find(s => s.dealId === dealId)
 
-// ── Email Threads ──
+// -- Email Threads --
 
 export const emailThreads: EmailThread[] = [
-  // ── Envato (d-1) — thread 19d4ae6970f5f98f ──
+  // -- Envato (d-1) - thread 19d4ae6970f5f98f --
   {
     activityId: 'a-1', dealId: 'd-1',
     messages: [
-      { id: 'em-1', from: 'partnerships@brand-sprints.com', to: 'hichame.assi@envato.com', subject: 'Jamey Gannon x Envato - Partnership Next Steps', body: 'Hi Hichame,\n\nFollowing up on our conversation. Here are 3 ideas we\'d love to explore:\n\n1. 1stCollab post — Jamey is already working on this\n2. Live workshop — AI design workflows for the Envato audience\n3. Tuts+ educational series — ongoing tutorial content\n\nLet us know what resonates and we can put together a formal proposal.\n\nBest,\nJustin', timestamp: '2026-04-01T12:00:00Z', direction: 'outbound' },
+      { id: 'em-1', from: 'partnerships@brand-sprints.com', to: 'hichame.assi@envato.com', subject: 'Jamey Gannon x Envato - Partnership Next Steps', body: 'Hi Hichame,\n\nFollowing up on our conversation. Here are 3 ideas we\'d love to explore:\n\n1. 1stCollab post - Jamey is already working on this\n2. Live workshop - AI design workflows for the Envato audience\n3. Tuts+ educational series - ongoing tutorial content\n\nLet us know what resonates and we can put together a formal proposal.\n\nBest,\nJustin', timestamp: '2026-04-01T12:00:00Z', direction: 'outbound' },
       { id: 'em-2', from: 'hichame.assi@envato.com', to: 'partnerships@brand-sprints.com', subject: 'Re: Jamey Gannon x Envato - Partnership Next Steps', body: 'Probably best for you to send through a proposal but itemize it for the 2nd and 3rd points above. We\'ll then review and get back to you ASAP. Glad Jamey\'s working on the 1st Collab post.', timestamp: '2026-04-02T14:00:00Z', direction: 'inbound' },
     ],
   },
-  // ── Krea (d-2) — thread 19d315b57aa6aec3 ──
+  // -- Krea (d-2) - thread 19d315b57aa6aec3 --
   {
     activityId: 'a-2', dealId: 'd-2',
     messages: [
@@ -482,31 +437,31 @@ export const emailThreads: EmailThread[] = [
       { id: 'em-5', from: 'partnerships@brand-sprints.com', to: 'miguel@krea.ai', subject: 'Re: Krea x Jamey Gannon - Next Steps', body: 'Sounds good Miguel, looking forward to hearing back. Let me know if you need anything from our side.', timestamp: '2026-04-05T10:15:00Z', direction: 'outbound' },
     ],
   },
-  // ── ElevenLabs (d-3) — thread 19cfc0c1cc584619 ──
+  // -- ElevenLabs (d-3) - thread 19cfc0c1cc584619 --
   {
     activityId: 'a-7', dealId: 'd-3',
     messages: [
       { id: 'em-6', from: 'liz@kudosnarratives.com', to: 'partnerships@brand-sprints.com', subject: 'ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Hi Justin,\n\nI\'m Liza from Kudos Narratives, reaching out on behalf of ElevenLabs regarding a collaboration proposal for Jamey Gannon. Would love to discuss terms and deliverables.\n\nBest,\nLiza Novikova\nKudos Narratives', timestamp: '2026-04-04T10:00:00Z', direction: 'inbound' },
-      { id: 'em-7', from: 'konstantin@kudosnarratives.com', to: 'partnerships@brand-sprints.com', subject: 'Re: ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Hi Justin,\n\nSharing the brief — it\'s an IG video cross-posted to TikTok featuring ElevenLabs Dubbing v2. Let me know if you have any questions.\n\nBest,\nKonstantin Kanin\nKudos Narratives', timestamp: '2026-04-06T13:00:00Z', direction: 'inbound' },
-      { id: 'em-8', from: 'partnerships@brand-sprints.com', to: 'konstantin@kudosnarratives.com', subject: 'Re: ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Works! Let\'s do it. Send agreement.\n\nAlso — what\'s the deadline on this, and can we get tool access for Jamey to start exploring Dubbing v2?\n\nBest,\nJustin', timestamp: '2026-04-08T11:00:00Z', direction: 'outbound' },
+      { id: 'em-7', from: 'konstantin@kudosnarratives.com', to: 'partnerships@brand-sprints.com', subject: 'Re: ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Hi Justin,\n\nSharing the brief - it\'s an IG video cross-posted to TikTok featuring ElevenLabs Dubbing v2. Let me know if you have any questions.\n\nBest,\nKonstantin Kanin\nKudos Narratives', timestamp: '2026-04-06T13:00:00Z', direction: 'inbound' },
+      { id: 'em-8', from: 'partnerships@brand-sprints.com', to: 'konstantin@kudosnarratives.com', subject: 'Re: ElevenLabs Collaboration Proposal x Jamey Gannon', body: 'Works! Let\'s do it. Send agreement.\n\nAlso - what\'s the deadline on this, and can we get tool access for Jamey to start exploring Dubbing v2?\n\nBest,\nJustin', timestamp: '2026-04-08T11:00:00Z', direction: 'outbound' },
     ],
   },
-  // ── Decimals (d-4) — thread 19d412ebdd4af0b5 ──
+  // -- Decimals (d-4) - thread 19d412ebdd4af0b5 --
   {
     activityId: 'a-17', dealId: 'd-4',
     messages: [
       { id: 'em-9', from: 'danny@decimals.work', to: 'partnerships@brand-sprints.com', subject: 'Jamey <> Decimals', body: 'Hey Justin,\n\nDanny here from Decimals. Would love to chat about a potential collaboration with Jamey. We think there\'s a strong fit with our designer community.\n\nBest,\nDanny Martinez\nDecimals', timestamp: '2026-04-05T14:00:00Z', direction: 'inbound' },
       { id: 'em-10', from: 'partnerships@brand-sprints.com', to: 'danny@decimals.work', subject: 'Re: Jamey <> Decimals', body: 'Hey Danny, great to connect. Let\'s set up a time to discuss. Looking at the affiliate model and what a campaign could look like.\n\nBest,\nJustin', timestamp: '2026-04-06T10:00:00Z', direction: 'outbound' },
-      { id: 'em-11', from: 'danny@decimals.work', to: 'partnerships@brand-sprints.com', subject: 'Re: Jamey <> Decimals', body: 'Sounds great. Let\'s meet today to finalize details.\n\n— Danny', timestamp: '2026-04-08T09:00:00Z', direction: 'inbound' },
+      { id: 'em-11', from: 'danny@decimals.work', to: 'partnerships@brand-sprints.com', subject: 'Re: Jamey <> Decimals', body: 'Sounds great. Let\'s meet today to finalize details.\n\n- Danny', timestamp: '2026-04-08T09:00:00Z', direction: 'inbound' },
     ],
   },
-  // ── Reve (d-7) — thread 19d50e8eb71351e6 ──
+  // -- Reve (d-7) - thread 19d50e8eb71351e6 --
   {
     activityId: 'a-16', dealId: 'd-7',
     messages: [
-      { id: 'em-12', from: 'oscar.dumlao@reve.art', to: 'hello@brand-sprints.com', subject: 'Jamey <> Reve', body: 'Hey — saw Jamey\'s thread on X and loved it. Would love to connect and explore a potential collaboration with Reve. Looping in Melisa from our team.\n\nOscar Dumlao\nReve.art', timestamp: '2026-04-05T16:00:00Z', direction: 'inbound' },
-      { id: 'em-13', from: 'jamey@brand-sprints.com', to: 'oscar.dumlao@reve.art', subject: 'Re: Jamey <> Reve', body: 'Down to jam next week and talk workflows, then can loop in my manager Justin.\n\n— Jamey', timestamp: '2026-04-06T12:00:00Z', direction: 'outbound' },
-      { id: 'em-14', from: 'melisa.seah@reve.art', to: 'jamey@brand-sprints.com', subject: 'Re: Jamey <> Reve', body: 'Great to meet you Jamey — love your work and excited to chat! Here\'s my booking link to set up a time.\n\nMelisa Seah\nReve.art', timestamp: '2026-04-07T15:00:00Z', direction: 'inbound' },
+      { id: 'em-12', from: 'oscar.dumlao@reve.art', to: 'hello@brand-sprints.com', subject: 'Jamey <> Reve', body: 'Hey - saw Jamey\'s thread on X and loved it. Would love to connect and explore a potential collaboration with Reve. Looping in Melisa from our team.\n\nOscar Dumlao\nReve.art', timestamp: '2026-04-05T16:00:00Z', direction: 'inbound' },
+      { id: 'em-13', from: 'jamey@brand-sprints.com', to: 'oscar.dumlao@reve.art', subject: 'Re: Jamey <> Reve', body: 'Down to jam next week and talk workflows, then can loop in my manager Justin.\n\n- Jamey', timestamp: '2026-04-06T12:00:00Z', direction: 'outbound' },
+      { id: 'em-14', from: 'melisa.seah@reve.art', to: 'jamey@brand-sprints.com', subject: 'Re: Jamey <> Reve', body: 'Great to meet you Jamey - love your work and excited to chat! Here\'s my booking link to set up a time.\n\nMelisa Seah\nReve.art', timestamp: '2026-04-07T15:00:00Z', direction: 'inbound' },
     ],
   },
 ]

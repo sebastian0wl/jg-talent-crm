@@ -17,5 +17,9 @@ export function getDealHash(deal: Deal): string {
     priority: deal.priority,
     expectedCloseDate: deal.expectedCloseDate,
   }
-  return btoa(JSON.stringify(material)).slice(0, 32)
+  const str = JSON.stringify(material)
+  // Use TextEncoder for Unicode-safe base64
+  const bytes = new TextEncoder().encode(str)
+  const binStr = Array.from(bytes, b => String.fromCharCode(b)).join('')
+  return btoa(binStr).slice(0, 32)
 }

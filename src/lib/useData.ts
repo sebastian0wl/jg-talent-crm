@@ -293,6 +293,7 @@ export function useAttachments() {
     fileType: AttachmentType,
     companyId?: string,
     onProgress?: (percent: number) => void,
+    description?: string,
   ): Promise<Attachment | null> => {
     const id = generateId('att')
     const storagePath = `deals/${dealId}/${fileType}/${file.name}`
@@ -334,6 +335,7 @@ export function useAttachments() {
         mimeType: file.type,
         storagePath,
         publicUrl,
+        description,
         uploadedBy: 'justin',
         createdAt: new Date().toISOString(),
       }
@@ -374,13 +376,51 @@ export function useAttachments() {
     return mockAttachment
   }, [])
 
+  const attachUrl = useCallback(async (
+    url: string,
+    dealId: string,
+    fileType: AttachmentType,
+    fileName: string,
+    description?: string,
+    companyId?: string,
+  ): Promise<Attachment | null> => {
+    const id = generateId('att')
+
+    const newAttachment: Attachment = {
+      id,
+      dealId,
+      companyId,
+      fileType,
+      fileName,
+      storagePath: undefined,
+      publicUrl: url,
+      description,
+      uploadedBy: 'justin',
+      createdAt: new Date().toISOString(),
+    }
+
+    if (USE_SUPABASE && supabase) {
+      const { error } = await (sb().from('attachments') as any)
+        .insert(camelToSnake(newAttachment as unknown as Record<string, unknown>))
+      if (error) {
+        console.error('URL attachment insert failed:', error)
+        return null
+      }
+    }
+
+    setAttachments(prev => [newAttachment, ...prev])
+    return newAttachment
+  }, [])
+
   const deleteAttachment = useCallback(async (attachment: Attachment) => {
     // Optimistic removal
     setAttachments(prev => prev.filter(a => a.id !== attachment.id))
 
     if (USE_SUPABASE && supabase) {
-      // Delete from storage
-      await sb().storage.from(STORAGE_BUCKET).remove([attachment.storagePath])
+      // Only delete from storage if there's an actual stored file
+      if (attachment.storagePath) {
+        await sb().storage.from(STORAGE_BUCKET).remove([attachment.storagePath])
+      }
       // Delete record
       await (sb().from('attachments') as any).delete().eq('id', attachment.id)
     }
@@ -390,7 +430,7 @@ export function useAttachments() {
     return attachments.filter(a => a.dealId === dealId)
   }, [attachments])
 
-  return { attachments, loading, uploadFile, deleteAttachment, getAttachmentsForDeal }
+  return { attachments, loading, uploadFile, attachUrl, deleteAttachment, getAttachmentsForDeal }
 }
 
 // ── Deal Contacts (junction table) ──

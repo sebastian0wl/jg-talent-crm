@@ -6,6 +6,7 @@ const pipelineStageColors: Record<PipelineId, string> = {
   content: 'bg-blue-50 text-blue-700 border-blue-200',
   partnership: 'bg-purple-50 text-purple-700 border-purple-200',
   service: 'bg-amber-50 text-amber-700 border-amber-200',
+  education: 'bg-emerald-50 text-emerald-700 border-emerald-200',
 }
 
 export function StageBadge({ stage, pipeline }: { stage: string; pipeline: PipelineId }) {
@@ -21,6 +22,7 @@ const pipelineBadgeColors: Record<PipelineId, string> = {
   content: 'bg-blue-100 text-blue-800',
   partnership: 'bg-purple-100 text-purple-800',
   service: 'bg-amber-100 text-amber-800',
+  education: 'bg-emerald-100 text-emerald-800',
 }
 
 export function PipelineBadge({ pipeline }: { pipeline: PipelineId }) {

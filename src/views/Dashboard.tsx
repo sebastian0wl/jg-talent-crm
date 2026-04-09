@@ -57,7 +57,7 @@ export function Dashboard({ onDealClick, user }: Props) {
     const avgDealSize = active.length > 0 ? totalPipelineValue / active.length : 0
 
     // Pipeline breakdown
-    const pipelines: PipelineId[] = ['content', 'partnership', 'service']
+    const pipelines: PipelineId[] = ['content', 'partnership', 'service', 'education']
     const pipelineData = pipelines.map(pid => {
       const pDeals = active.filter(d => d.pipeline === pid)
       const value = pDeals.reduce((s, d) => s + (d.value ?? 0), 0)

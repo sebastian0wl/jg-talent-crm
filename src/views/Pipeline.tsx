@@ -20,7 +20,7 @@ export function Pipeline({ onDealClick }: Props) {
   const [priorityFilter, setPriorityFilter] = useState('')
   const [ownerFilter, setOwnerFilter] = useState('')
 
-  const pipelines: PipelineId[] = ['content', 'partnership', 'service']
+  const pipelines: PipelineId[] = ['content', 'partnership', 'service', 'education']
   const stages = PIPELINE_STAGES[activePipeline]
 
   const priorityOptions = useMemo(() => {
