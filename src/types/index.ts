@@ -255,6 +255,17 @@ export const ATTACHMENT_TYPE_META: Record<AttachmentType, { label: string; icon:
   other: { label: 'Other', icon: '📎' },
 }
 
+export type ExtractionStatus = 'pending' | 'extracting' | 'done' | 'failed' | 'skipped'
+export type AttachmentSourceType = 'file' | 'url'
+
+export interface AiAnalysis {
+  summary?: string
+  keyTerms?: string[]
+  dealFieldSuggestions?: Record<string, unknown>
+  documentType?: string
+  confidence?: number
+}
+
 export interface Attachment {
   id: string
   dealId?: string
@@ -268,6 +279,10 @@ export interface Attachment {
   description?: string
   uploadedBy?: 'justin' | 'jamey' | 'agent' | 'system'
   createdAt: string
+  extractionStatus?: ExtractionStatus
+  extractedText?: string
+  aiAnalysis?: AiAnalysis
+  sourceType?: AttachmentSourceType
 }
 
 // ── Company Relationships ──

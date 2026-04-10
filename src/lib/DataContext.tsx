@@ -29,6 +29,8 @@ interface DataContextValue {
   uploadFile: (file: File, dealId: string, fileType: AttachmentType, companyId?: string, onProgress?: (percent: number) => void, description?: string) => Promise<Attachment | null>
   attachUrl: (url: string, dealId: string, fileType: AttachmentType, fileName: string, description?: string, companyId?: string) => Promise<Attachment | null>
   deleteAttachment: (attachment: Attachment) => Promise<void>
+  updateAttachment: (id: string, updates: Partial<Attachment>) => Promise<void>
+  extractText: (attachment: Attachment) => Promise<string | null>
   getAttachmentsForDeal: (dealId: string) => Attachment[]
 
   // Junction table data
@@ -67,7 +69,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const { activities, loading: activitiesLoading, createActivity } = useActivities()
   const { companies, loading: companiesLoading, updateCompany } = useCompanies()
   const { people, loading: peopleLoading, updatePerson } = usePeople()
-  const { attachments, loading: attachmentsLoading, uploadFile, attachUrl, deleteAttachment, getAttachmentsForDeal } = useAttachments()
+  const { attachments, loading: attachmentsLoading, uploadFile, attachUrl, deleteAttachment, updateAttachment, extractText, getAttachmentsForDeal } = useAttachments()
   const { dealContacts, loading: dealContactsLoading, addDealContact, updateDealContact, removeDealContact } = useDealContacts()
   const { personCompanies, loading: personCompaniesLoading, addPersonCompany, updatePersonCompany, removePersonCompany } = usePersonCompanies()
 
@@ -128,7 +130,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       deals, tasks, activities, companies, people,
       updateDeal, createDeal, updateTask, createTask, createActivity,
       updateCompany, updatePerson,
-      attachments, uploadFile, attachUrl, deleteAttachment, getAttachmentsForDeal,
+      attachments, uploadFile, attachUrl, deleteAttachment, updateAttachment, extractText, getAttachmentsForDeal,
       dealContacts, addDealContact, updateDealContact, removeDealContact,
       personCompanies, addPersonCompany, updatePersonCompany, removePersonCompany,
       getCompany, getPerson, getDeal,

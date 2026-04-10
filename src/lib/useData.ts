@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, USE_SUPABASE } from './supabase'
-import type { Deal, Task, Activity, Company, Person, Attachment, AttachmentType, DealContact, PersonCompany } from '../types'
+import type { Deal, Task, Activity, Company, Person, Attachment, AttachmentType, ExtractionStatus, DealContact, PersonCompany } from '../types'
 import {
   companies as mockCompanies,
   people as mockPeople,
@@ -273,11 +273,13 @@ export function useAttachments() {
       setLoading(false)
     })
 
-    // Realtime subscription
+    // Realtime subscription (INSERT, UPDATE, DELETE)
     const channel = sb().channel('attachments-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'attachments' }, (payload) => {
         if (payload.eventType === 'INSERT' && payload.new) {
           setAttachments(prev => [snakeToCamel(payload.new as Record<string, unknown>) as unknown as Attachment, ...prev])
+        } else if (payload.eventType === 'UPDATE' && payload.new) {
+          setAttachments(prev => prev.map(a => a.id === (payload.new as any).id ? snakeToCamel(payload.new as Record<string, unknown>) as unknown as Attachment : a))
         } else if (payload.eventType === 'DELETE' && payload.old) {
           setAttachments(prev => prev.filter(a => a.id !== (payload.old as any).id))
         }
@@ -338,6 +340,8 @@ export function useAttachments() {
         description,
         uploadedBy: 'justin',
         createdAt: new Date().toISOString(),
+        sourceType: 'file',
+        extractionStatus: 'pending',
       }
 
       const { error: insertError } = await (sb().from('attachments') as any)
@@ -397,6 +401,8 @@ export function useAttachments() {
       description,
       uploadedBy: 'justin',
       createdAt: new Date().toISOString(),
+      sourceType: 'url',
+      extractionStatus: 'pending',
     }
 
     if (USE_SUPABASE && supabase) {
@@ -426,11 +432,55 @@ export function useAttachments() {
     }
   }, [])
 
+  const updateAttachment = useCallback(async (id: string, updates: Partial<Attachment>) => {
+    setAttachments(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a))
+
+    if (USE_SUPABASE && supabase) {
+      await (sb().from('attachments') as any).update(camelToSnake(updates as Record<string, unknown>)).eq('id', id)
+    }
+  }, [])
+
+  // Client-side text extraction for supported file types
+  const extractText = useCallback(async (attachment: Attachment): Promise<string | null> => {
+    // Mark as extracting
+    await updateAttachment(attachment.id, { extractionStatus: 'extracting' as ExtractionStatus })
+
+    try {
+      // For text-based files: fetch and read directly
+      const textMimes = ['text/plain', 'text/markdown', 'text/csv', 'text/html', 'application/json']
+      const textExts = ['.txt', '.md', '.csv', '.json', '.html', '.htm']
+      const isTextFile = textMimes.some(m => attachment.mimeType?.startsWith(m)) ||
+        textExts.some(ext => attachment.fileName.toLowerCase().endsWith(ext))
+
+      if (isTextFile && attachment.publicUrl) {
+        const resp = await fetch(attachment.publicUrl)
+        const text = await resp.text()
+        await updateAttachment(attachment.id, { extractedText: text, extractionStatus: 'done' as ExtractionStatus })
+        return text
+      }
+
+      // For PDFs and other binary formats: mark as needing server-side extraction
+      // (Future: add pdf.js or edge function extraction here)
+      if (attachment.mimeType === 'application/pdf') {
+        await updateAttachment(attachment.id, { extractionStatus: 'pending' as ExtractionStatus })
+        return null
+      }
+
+      // Images and unsupported types
+      await updateAttachment(attachment.id, { extractionStatus: 'skipped' as ExtractionStatus })
+      return null
+    } catch (err) {
+      console.error('Text extraction failed:', err)
+      await updateAttachment(attachment.id, { extractionStatus: 'failed' as ExtractionStatus })
+      return null
+    }
+  }, [updateAttachment])
+
   const getAttachmentsForDeal = useCallback((dealId: string) => {
     return attachments.filter(a => a.dealId === dealId)
   }, [attachments])
 
-  return { attachments, loading, uploadFile, attachUrl, deleteAttachment, getAttachmentsForDeal }
+  return { attachments, loading, uploadFile, attachUrl, deleteAttachment, updateAttachment, extractText, getAttachmentsForDeal }
 }
 
 // ── Deal Contacts (junction table) ──

@@ -7,6 +7,7 @@ import { StageBadge, PipelineBadge, PriorityBadge, ActivityIcon } from './Badges
 import { DealScoreCard } from './DealScoreCard'
 import { EmailThreadView } from './EmailThreadView'
 import { AskAI } from './AskAI'
+import DocumentViewer from './DocumentViewer'
 
 interface Props {
   dealId: string
@@ -696,7 +697,7 @@ function EditableTaskCard({ task: t, onUpdate }: { task: any; onUpdate: (id: str
 }
 
 function DocumentsSection({ dealId }: { dealId: string }) {
-  const { uploadFile, attachUrl, deleteAttachment, getAttachmentsForDeal, getDeal } = useData()
+  const { uploadFile, attachUrl, deleteAttachment, extractText, getAttachmentsForDeal, getDeal } = useData()
   const docs = getAttachmentsForDeal(dealId)
   const deal = getDeal(dealId)
   const companyId = deal?.companyId
@@ -711,6 +712,7 @@ function DocumentsSection({ dealId }: { dealId: string }) {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
+  const [viewingDoc, setViewingDoc] = useState<Attachment | null>(null)
   const fileInputId = `doc-upload-${dealId}`
 
   const resetForm = () => {
@@ -769,7 +771,7 @@ function DocumentsSection({ dealId }: { dealId: string }) {
       {docs.length > 0 && (
         <div className="space-y-1.5 mb-3">
           {docs.map(doc => (
-            <DocumentRow key={doc.id} doc={doc} onDelete={() => deleteAttachment(doc)} formatSize={formatSize} />
+            <DocumentRow key={doc.id} doc={doc} onDelete={() => deleteAttachment(doc)} onClick={() => setViewingDoc(doc)} formatSize={formatSize} />
           ))}
         </div>
       )}
@@ -888,34 +890,37 @@ function DocumentsSection({ dealId }: { dealId: string }) {
           </button>
         </div>
       )}
+
+      {/* Document Viewer Modal */}
+      {viewingDoc && (
+        <DocumentViewer
+          doc={viewingDoc}
+          onClose={() => setViewingDoc(null)}
+          onExtract={() => extractText(viewingDoc)}
+        />
+      )}
     </div>
   )
 }
 
-function DocumentRow({ doc, onDelete, formatSize }: { doc: Attachment; onDelete: () => void; formatSize: (b?: number) => string }) {
+function DocumentRow({ doc, onDelete, onClick, formatSize }: { doc: Attachment; onDelete: () => void; onClick: () => void; formatSize: (b?: number) => string }) {
   const meta = ATTACHMENT_TYPE_META[doc.fileType] ?? ATTACHMENT_TYPE_META.other
-  const isUrl = !doc.storagePath && !!doc.publicUrl
+  const isUrl = doc.sourceType === 'url' || (!doc.storagePath && !!doc.publicUrl)
+  const hasExtraction = doc.extractionStatus === 'done'
 
   return (
-    <div className="flex items-center gap-2 p-2 rounded-lg border border-border bg-white group hover:border-brand-200 transition-colors">
+    <div
+      className="flex items-center gap-2 p-2 rounded-lg border border-border bg-white group hover:border-brand-200 transition-colors cursor-pointer"
+      onClick={onClick}
+    >
       <span className="text-base flex-shrink-0">{meta.icon}</span>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          {doc.publicUrl ? (
-            <a
-              href={doc.publicUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-medium text-brand-600 hover:text-brand-700 truncate"
-              title={doc.fileName}
-              onClick={e => e.stopPropagation()}
-            >
-              {doc.fileName}
-            </a>
-          ) : (
-            <span className="text-xs font-medium text-text-primary truncate" title={doc.fileName}>{doc.fileName}</span>
-          )}
+          <span className="text-xs font-medium text-brand-600 hover:text-brand-700 truncate" title={doc.fileName}>
+            {doc.fileName}
+          </span>
           {isUrl && <span className="text-[9px] bg-blue-100 text-blue-700 px-1 py-0.5 rounded flex-shrink-0">URL</span>}
+          {hasExtraction && <span className="text-[9px] bg-green-100 text-green-700 px-1 py-0.5 rounded flex-shrink-0">Extracted</span>}
         </div>
         <div className="flex items-center gap-2 mt-0.5">
           <span className="text-[10px] text-text-muted">{meta.label}</span>
@@ -924,7 +929,7 @@ function DocumentRow({ doc, onDelete, formatSize }: { doc: Attachment; onDelete:
         </div>
       </div>
       <button
-        onClick={onDelete}
+        onClick={e => { e.stopPropagation(); onDelete() }}
         className="opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-600 text-xs p-1 rounded hover:bg-red-50 flex-shrink-0"
         title="Remove"
       >
