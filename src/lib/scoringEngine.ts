@@ -147,6 +147,9 @@ function scoreAudienceMatch(deal: Deal): DimensionScore {
     'QRT + Comment':        { grade: 'C', reason: 'QRT + Comment format has shallow engagement. Brief touchpoint, not deep connection.' },
     'Affiliate':            { grade: 'C', reason: 'Affiliate deals are transactional. Audience match depends on the product, not the format.' },
     'Brand Design':         { grade: 'D', reason: 'Brand design is service work — Jamey\'s audience doesn\'t see it happening.' },
+    'Event Sponsorship':    { grade: 'A', reason: 'Event sponsorship ties brands to Jamey\'s education events — strong audience alignment.' },
+    'Live Event':           { grade: 'S', reason: 'Live events put Jamey directly in front of her core audience.' },
+    'Cohort Course':        { grade: 'S', reason: 'Cohort courses build deep audience relationships over multiple sessions.' },
   }
 
   const match = typeGrades[type] ?? { grade: 'B', reason: `${type} deal — moderate audience alignment.` }
@@ -231,6 +234,9 @@ function scoreCreativeValue(deal: Deal): DimensionScore {
     'Sponsored Post':       { grade: 'C', reason: 'Sponsored post format limits creative depth. Brief, not portfolio-worthy.' },
     'QRT + Comment':        { grade: 'D', reason: 'QRT + Comment is the lowest creative bar. Quick engagement, not creative showcase.' },
     'Affiliate':            { grade: 'D', reason: 'Affiliate is transactional. No creative value — just a promotion.' },
+    'Event Sponsorship':    { grade: 'B', reason: 'Event sponsorship is operational — creative value comes from the event itself.' },
+    'Live Event':           { grade: 'A', reason: 'Live events showcase Jamey\'s teaching and creative process in real time.' },
+    'Cohort Course':        { grade: 'S', reason: 'Cohort courses produce deep educational content — very high creative value.' },
   }
 
   const match = typeGrades[deal.type] ?? { grade: 'B', reason: `${deal.type} — moderate creative value.` }
@@ -250,6 +256,9 @@ function scoreTimeCost(deal: Deal): DimensionScore {
     'Creative Direction':   { grade: 'D', reason: 'Creative direction is high-effort, high-touch work. Weeks of involvement.' },
     'Consulting':           { grade: 'D', reason: 'Consulting requires deep engagement. High time cost per deliverable.' },
     'Brand Design':         { grade: 'D', reason: 'Brand design projects are time-intensive. Multiple rounds of iteration.' },
+    'Event Sponsorship':    { grade: 'A', reason: 'Event sponsorship is mostly sales — low time cost once the event is planned.' },
+    'Live Event':           { grade: 'C', reason: 'Live events require significant preparation and execution time.' },
+    'Cohort Course':        { grade: 'D', reason: 'Cohort courses require weeks of curriculum creation and delivery.' },
   }
 
   const match = typeGrades[deal.type] ?? { grade: 'B', reason: `${deal.type} — moderate time cost.` }

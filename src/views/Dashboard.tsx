@@ -14,6 +14,7 @@ const FINAL_STAGES: Record<PipelineId, string[]> = {
   content: ['Paid'],
   partnership: ['Active', 'Renewal'],
   service: ['Paid'],
+  education: ['Delivered', 'Paid'],
 }
 
 function formatCurrency(n: number): string {
